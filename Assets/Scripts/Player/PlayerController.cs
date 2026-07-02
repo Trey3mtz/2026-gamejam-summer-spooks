@@ -1,3 +1,4 @@
+using SpookyGame.Core;
 using UnityEngine;
 using SummerSpooks.Player.Data;
 using SummerSpooks.Player.Configuration;
@@ -18,6 +19,7 @@ namespace SummerSpooks.Player
         [SerializeField] private LayerMask _groundMask;
         [Tooltip("Optional. Found on this GameObject if left empty.")]
         [SerializeField] private PlayerLook _look;
+        [SerializeField] private InteractableSensor _interactableSensor;
 
         private PlayerInputInterpreter _input;
         private CapsuleCollider _capsule;
@@ -58,11 +60,23 @@ namespace SummerSpooks.Player
 
             float dt = Time.deltaTime;
 
-            // 1. Look first so movement is relative to the freshly-rotated body.
+            // First, update our movement and camera.
+            UpdateLocomotion(dt);
+            
+            // Then, check for other non-movement inputs.
+            HandleInteractInput();
+            
+            // Lastly, Consume single-frame input edges.
+            _input.EndFrame();
+        }
+
+        // Handle movement and camera rotation.
+        private void UpdateLocomotion(float dt)
+        {
+            // Look first so movement is relative to the freshly-rotated body.
             if (_look)
                 _look.Tick(_input.LookInput, _input.CurrentDevice);
-
-            // 2. Build a world-space move direction from the body's orientation.
+            
             Vector2 move = _input.MovementInput;
             Vector3 worldMove = transform.right * move.x + transform.forward * move.y;
             worldMove.y = 0f;
@@ -81,13 +95,17 @@ namespace SummerSpooks.Player
                 Tick = _tick++
             };
 
-            // 3. Simulate the next state, then commit the predicted position.
+            // Simulate the next state, then commit the predicted position.
             _state.Position = transform.position; // resync in case something else moved us
             _state = PlayerPhysics3D.Simulate(_state, cmd, _movementProfile, _capsule, _groundMask);
             transform.position = _state.Position;
-
-            // 4. Consume single-frame input edges.
-            _input.EndFrame();
         }
+
+        private void HandleInteractInput()
+        {
+            if(_input.InteractPressed)
+                _interactableSensor.TryInteract();
+        }
+
     }
 }

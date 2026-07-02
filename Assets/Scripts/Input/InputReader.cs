@@ -189,8 +189,7 @@ namespace SummerSpooks.Input
 
         public void OnInteract(InputAction.CallbackContext context)
         {
-            if (context.performed) Interact.Invoke(true);
-            else if (context.canceled) Interact.Invoke(false);
+            if (context.started) Interact.Invoke(true);
         }
     }
 
