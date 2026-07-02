@@ -32,10 +32,27 @@ namespace SummerSpooks.Input
         public event UnityAction<bool> Item = delegate { };
         public event UnityAction<bool> Next = delegate { };
         public event UnityAction<bool> Previous = delegate { };
-
+  
         // Input Properties
         public Vector2 Direction => Actions.Player.Move.ReadValue<Vector2>();
+        
+        public event UnityAction<ControlDeviceType> OnDeviceChanged = delegate { };
+        public ControlDeviceType CurrentDevice { get; private set; }
+        
+        private void OnEnable()
+        {
+            // Hook into the Unity 6 Input System global device change callback
+            InputSystem.onDeviceChange += HandleDeviceChange;
+            // Also listen for button presses to dynamically switch schemes when a user grabs a controller
+            InputSystem.onActionChange += HandleActionChange;
+        }
 
+        private void OnDisable()
+        {
+            InputSystem.onDeviceChange -= HandleDeviceChange;
+            InputSystem.onActionChange -= HandleActionChange;
+        }
+        
         public void EnablePlayerActions() 
         {
             if (Actions == null || Actions.asset == null)
@@ -56,8 +73,59 @@ namespace SummerSpooks.Input
             Actions.Disable();
         }
 
-        
+        private void HandleDeviceChange(InputDevice device, InputDeviceChange change)
+        {
+            switch (change)
+            {
+                case InputDeviceChange.Added:
+                case InputDeviceChange.Reconnected:
+                case InputDeviceChange.Removed:
+                case InputDeviceChange.Disconnected:
+                    // Evaluate the current state of devices when hardware topology changes
+                    EvaluateActiveDevice(device);
+                    break;
+            }
+        }
 
+        private void HandleActionChange(object obj, InputActionChange change)
+        {
+            // Pragmatic check: If an action was performed, check what device performed it.
+            // This handles the user seamlessly switching from keyboard to a controller mid-game.
+            if (change == InputActionChange.ActionStarted && obj is InputAction action)
+            {
+                if (action.activeControl != null)
+                {
+                    EvaluateActiveDevice(action.activeControl.device);
+                }
+            }
+        }
+        
+        private void EvaluateActiveDevice(InputDevice device)
+        {
+            ControlDeviceType detectedType = CurrentDevice;
+
+            if (device is Gamepad)
+            {
+                detectedType = ControlDeviceType.Gamepad;
+            }
+            else if (device is Keyboard || device is Mouse)
+            {
+                detectedType = ControlDeviceType.KeyboardMouse;
+            }
+
+            // Only trigger transformations/events if the data actually changed
+            if (detectedType != CurrentDevice)
+            {
+                CurrentDevice = detectedType;
+                OnDeviceChanged?.Invoke(CurrentDevice);
+            
+#if UNITY_EDITOR
+                Debug.Log($"[InputDeviceObserver] Control scheme swapped to: {CurrentDevice}");
+#endif
+            }
+        }
+        
+        
         /*
         PHASE	    DESCRIPTION
         ---------------------------------------------------------
@@ -126,9 +194,17 @@ namespace SummerSpooks.Input
         }
     }
 
+    // --- Interface for enabling/disabling input ---
     public interface IInputReader
     {
         void EnablePlayerActions();
         void DisablePlayerActions();
+    }
+    
+    // --- Enum for device type --- 
+    public enum ControlDeviceType
+    {
+        KeyboardMouse,
+        Gamepad
     }
 }

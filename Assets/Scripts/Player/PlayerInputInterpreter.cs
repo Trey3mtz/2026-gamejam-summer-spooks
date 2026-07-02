@@ -18,15 +18,28 @@ namespace SummerSpooks.Player
         private Vector2 _movementInput;
         private Vector2 _lookInput;
 
-        // Other systems can read these
+        // Other systems can read these values
+        
+        // --- Movement Related ---
         public Vector2 MovementInput => _movementInput;
         public Vector2 LookInput => _lookInput;
         public bool SprintHeld => _inputBuffers.Sprint;
         public bool CrouchHeld => _inputBuffers.Crouch;
         public bool JumpPressed => _inputBuffers.JumpPressed;
         public bool JumpReleased => _inputBuffers.JumpReleased;
-        public bool InteractPressed => _inputBuffers.Interact;
         public bool MoveCanceled => _inputBuffers.MoveCanceled;
+        
+        // --- Interaction Related ---
+        public bool InteractPressed => _inputBuffers.Interact;
+        public bool NextPressed => _inputBuffers.Next;
+        public bool PreviousPressed => _inputBuffers.Previous;
+        public bool ItemPressed => _inputBuffers.Item;
+        
+        // --- Control Scheme ---
+        public ControlDeviceType CurrentDevice => _inputReader.CurrentDevice;
+        public bool IsKeyboardMouse => _inputReader.CurrentDevice == ControlDeviceType.KeyboardMouse;
+        public bool IsGamepad => _inputReader.CurrentDevice == ControlDeviceType.Gamepad;
+        
 
         public void Subscribe()
         {
@@ -43,6 +56,9 @@ namespace SummerSpooks.Player
             _inputReader.Sprint += OnSprint;
             _inputReader.Crouch += OnCrouch;
             _inputReader.Interact += OnInteract;
+            _inputReader.Item += OnItem;
+            _inputReader.Next += OnNext;
+            _inputReader.Previous += OnPrevious;
             _inputReader.EnablePlayerActions();
         }
 
@@ -57,6 +73,9 @@ namespace SummerSpooks.Player
             _inputReader.Sprint -= OnSprint;
             _inputReader.Crouch -= OnCrouch;
             _inputReader.Interact -= OnInteract;
+            _inputReader.Item -= OnItem;
+            _inputReader.Next -= OnNext;
+            _inputReader.Previous -= OnPrevious;
             _inputReader.DisablePlayerActions();
         }
 
@@ -68,7 +87,8 @@ namespace SummerSpooks.Player
             _inputBuffers.Interact = false;
             // Pointer delta is per-frame: zero it so the camera does not keep drifting
             // on frames where the mouse did not move.
-            _lookInput = Vector2.zero;
+            if(IsKeyboardMouse)
+                _lookInput = Vector2.zero;
         }
 
         private void OnMove(Vector2 input)
@@ -101,6 +121,21 @@ namespace SummerSpooks.Player
         private void OnInteract(bool pressed)
         {
             if (pressed) _inputBuffers.Interact = true;
+        }
+        
+        private void OnItem(bool pressed)
+        {
+            if (pressed) _inputBuffers.Item = true;
+        }
+        
+        private void OnNext(bool pressed)
+        {
+            if (pressed) _inputBuffers.Next = true;
+        }
+        
+        private void OnPrevious(bool pressed)
+        {
+            if (pressed) _inputBuffers.Previous = true;
         }
     }
 }

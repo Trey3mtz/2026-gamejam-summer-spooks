@@ -1,3 +1,4 @@
+using SummerSpooks.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -15,7 +16,7 @@ namespace SummerSpooks.Player
 
         [Header("Sensitivity")]
         [Tooltip("Degrees of rotation per unit of pointer delta.")]
-        [SerializeField] private float _sensitivity = 0.08f;
+        [SerializeField] private float _sensitivity = 0.12f;
         [SerializeField] private bool _invertY = false;
 
         [Header("Pitch Limits")]
@@ -46,19 +47,26 @@ namespace SummerSpooks.Player
         }
 
         /// <summary>Apply a frame of pointer delta. Ignored while the cursor is unlocked.</summary>
-        public void Tick(Vector2 lookDelta)
+        public void Tick(Vector2 lookDelta, ControlDeviceType deviceType)
         {
             if (Cursor.lockState != CursorLockMode.Locked)
                 return;
 
-            _yaw += lookDelta.x * _sensitivity;
-            _pitch += lookDelta.y * _sensitivity * (_invertY ? 1f : -1f);
+            float finalSensivity = _sensitivity;
+            if (deviceType == ControlDeviceType.Gamepad)
+            {
+                finalSensivity *= 12f;
+            }
+
+            _yaw += lookDelta.x * finalSensivity;
+            _pitch += lookDelta.y * finalSensivity * (_invertY ? 1f : -1f);
             _pitch = Mathf.Clamp(_pitch, _minPitch, _maxPitch);
 
             transform.localRotation = Quaternion.Euler(0f, _yaw, 0f);
             if (_cameraPivot != null)
                 _cameraPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
         }
+        
 
         private void Update()
         {

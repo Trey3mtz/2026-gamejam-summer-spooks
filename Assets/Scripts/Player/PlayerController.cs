@@ -60,7 +60,7 @@ namespace SummerSpooks.Player
 
             // 1. Look first so movement is relative to the freshly-rotated body.
             if (_look)
-                _look.Tick(_input.LookInput);
+                _look.Tick(_input.LookInput, _input.CurrentDevice);
 
             // 2. Build a world-space move direction from the body's orientation.
             Vector2 move = _input.MovementInput;

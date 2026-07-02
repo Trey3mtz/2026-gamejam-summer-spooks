@@ -13,5 +13,8 @@ namespace SummerSpooks.Player.Data
         public bool Sprint;
         public bool Crouch;
         public bool Interact;
+        public bool Item;
+        public bool Next;
+        public bool Previous;
     }
 }
