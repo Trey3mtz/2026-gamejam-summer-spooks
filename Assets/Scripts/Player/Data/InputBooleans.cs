@@ -18,7 +18,20 @@ namespace SpookyGame.Player.Data
         public bool Previous;
         public bool Pause;
 
-        public void Reset()
+
+		public void EndFrameReset()
+		{
+            MoveCanceled = false;
+            JumpPressed = false;
+            JumpReleased = false;
+            Interact = false;
+            Item = false;
+            Next = false;
+            Previous = false;
+            Pause = false;
+		}
+        
+        public void FullReset()
         {
             MoveCanceled = false;
             JumpPressed = false;

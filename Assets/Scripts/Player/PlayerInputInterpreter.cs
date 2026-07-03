@@ -85,7 +85,7 @@ namespace SpookyGame.Player
         /// <summary>Clears single-frame input edges. Call once at the end of the owning update.</summary>
         public void EndFrame()
         {
-            _inputBuffers.Reset();
+            _inputBuffers.EndFrameReset();
             
             // Pointer delta is per-frame: zero it so the camera does not keep drifting
             // on frames where the mouse did not move.
