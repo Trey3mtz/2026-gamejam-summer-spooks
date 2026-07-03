@@ -3,6 +3,7 @@ using UnityEngine;
 
 namespace SpookyGame.Core.Item_System
 {
+    [CreateAssetMenu(fileName = "ItemDatabase", menuName = "SpookyGame/Systems/Create Item Database")]
     public class ItemDatabase : ScriptableObject
     {
         [SerializeReference]

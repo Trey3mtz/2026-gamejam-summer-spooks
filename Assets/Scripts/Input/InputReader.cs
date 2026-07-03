@@ -12,7 +12,7 @@ namespace SpookyGame.Input
     ///
     /// Lives as a ScriptableObject so it can be shared as one input "channel" across systems.
     /// </summary>
-    [CreateAssetMenu(menuName = "SpookyGame/Input Reader", fileName = "InputReader")]
+    [CreateAssetMenu(menuName = "SpookyGame/Systems/Input Reader", fileName = "InputReader")]
     public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     {
         [Tooltip("The Input Actions asset to drive. Assign InputSystem_Actions. " +

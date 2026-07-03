@@ -472,6 +472,8 @@ GameObject:
   - component: {fileID: 514480520}
   - component: {fileID: 514480521}
   - component: {fileID: 514480522}
+  - component: {fileID: 514480524}
+  - component: {fileID: 514480523}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -625,6 +627,30 @@ MonoBehaviour:
   _minPitch: -85
   _maxPitch: 85
   _lockCursorOnPlay: 1
+--- !u!114 &514480523
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514480505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f8ed0b11850145c4995dd76170bb2500, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: UnityEngine.TestRunner::UnityEngine.TestTools.TestRunner.Callbacks.PlayerQuitHandler
+--- !u!114 &514480524
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 514480505}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 937cb4ecfcfe40248a42cdc2c1e91d1f, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.Player
 --- !u!1 &807889878
 GameObject:
   m_ObjectHideFlags: 0
