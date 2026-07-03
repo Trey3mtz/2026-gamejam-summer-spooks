@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SummerSpooks.Player.Data
+namespace SpookyGame.Player.Data
 {
     /// <summary>
     /// The full motion state of the player for a single simulation tick.

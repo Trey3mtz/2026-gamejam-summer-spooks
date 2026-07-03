@@ -1,0 +1,52 @@
+using System.Collections.Generic;
+using SpookyGame.Core;
+using SpookyGame.Core.Item_System;
+using SpookyGame.Player.Data;
+using UnityEngine;
+
+namespace SpookyGame.Player
+{
+    public class Player : MonoBehaviour
+    {
+        // Reference to health, only used for saving/loading in this script here or for referencing.
+        private HealthBar _health;
+        public HealthBar Health => _health;
+        
+        private Inventory _inventory;
+        public Inventory Inventory => _inventory;
+        
+        private Vector3 _lastRespawnPosition;
+        
+        private void Awake()
+        {
+            _health = new HealthBar();
+            _health.InitHealthBar(10);
+            _inventory = new Inventory();
+            _lastRespawnPosition = transform.position;
+        }
+
+
+
+        
+        
+        
+        public void Save(ref PlayerSaveData data)
+        {                            
+            data.Inventory = new List<InventorySaveData>();         // Wipe previous saved inventory, save current inventory
+            _inventory.Save(ref data.Inventory);
+
+            data.Position = _lastRespawnPosition;
+            data.MaxHealth = _health.MaxHp;
+            data.CurrentHealth = _health.CurrentHp;
+        }
+
+        public void Load(PlayerSaveData data)
+        {
+            _inventory.Load(data.Inventory);
+
+            _lastRespawnPosition = data.Position;
+            _health.InitHealthBar(data.MaxHealth);
+            _health.SetCurrentHealth(data.CurrentHealth);
+        }
+    }
+}

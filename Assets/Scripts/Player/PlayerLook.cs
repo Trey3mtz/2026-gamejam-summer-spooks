@@ -1,8 +1,8 @@
-using SummerSpooks.Input;
+using SpookyGame.Input;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-namespace SummerSpooks.Player
+namespace SpookyGame.Player
 {
     /// <summary>
     /// First-person look. Yaw rotates the player body (this transform) so movement stays

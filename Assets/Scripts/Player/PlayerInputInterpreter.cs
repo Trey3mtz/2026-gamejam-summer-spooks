@@ -1,8 +1,8 @@
 using UnityEngine;
-using SummerSpooks.Input;
-using SummerSpooks.Player.Data;
+using SpookyGame.Input;
+using SpookyGame.Player.Data;
 
-namespace SummerSpooks.Player
+namespace SpookyGame.Player
 {
     /// <summary>
     /// Subscribes to the <see cref="InputReader"/> event channel and turns raw input
@@ -34,6 +34,7 @@ namespace SummerSpooks.Player
         public bool NextPressed => _inputBuffers.Next;
         public bool PreviousPressed => _inputBuffers.Previous;
         public bool ItemPressed => _inputBuffers.Item;
+        public bool PausePressed => _inputBuffers.Pause;
         
         // --- Control Scheme ---
         public ControlDeviceType CurrentDevice => _inputReader.CurrentDevice;
@@ -59,6 +60,7 @@ namespace SummerSpooks.Player
             _inputReader.Item += OnItem;
             _inputReader.Next += OnNext;
             _inputReader.Previous += OnPrevious;
+            _inputReader.Pause += OnPause;
             _inputReader.EnablePlayerActions();
         }
 
@@ -76,15 +78,15 @@ namespace SummerSpooks.Player
             _inputReader.Item -= OnItem;
             _inputReader.Next -= OnNext;
             _inputReader.Previous -= OnPrevious;
+            _inputReader.Pause -= OnPause;
             _inputReader.DisablePlayerActions();
         }
 
         /// <summary>Clears single-frame input edges. Call once at the end of the owning update.</summary>
         public void EndFrame()
         {
-            _inputBuffers.JumpPressed = false;
-            _inputBuffers.JumpReleased = false;
-            _inputBuffers.Interact = false;
+            _inputBuffers.Reset();
+            
             // Pointer delta is per-frame: zero it so the camera does not keep drifting
             // on frames where the mouse did not move.
             if(IsKeyboardMouse)
@@ -136,6 +138,11 @@ namespace SummerSpooks.Player
         private void OnPrevious(bool pressed)
         {
             if (pressed) _inputBuffers.Previous = true;
+        }
+        
+        private void OnPause(bool pressed)
+        {
+            if (pressed) _inputBuffers.Pause = true;
         }
     }
 }

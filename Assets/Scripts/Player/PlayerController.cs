@@ -1,9 +1,9 @@
 using SpookyGame.Core;
 using UnityEngine;
-using SummerSpooks.Player.Data;
-using SummerSpooks.Player.Configuration;
+using SpookyGame.Player.Data;
+using SpookyGame.Player.Configuration;
 
-namespace SummerSpooks.Player
+namespace SpookyGame.Player
 {
     /// <summary>
     /// Orchestrates the player: reads the interpreted input, drives the camera look,

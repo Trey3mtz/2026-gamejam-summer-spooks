@@ -1,12 +1,12 @@
 using UnityEngine;
 
-namespace SummerSpooks.Player.Configuration
+namespace SpookyGame.Player.Configuration
 {
     /// <summary>
     /// Tunable, per-character movement feel. Lives as an asset so designers can
     /// tweak the player without touching code or the scene.
     /// </summary>
-    [CreateAssetMenu(menuName = "SummerSpooks/Movement Profile", fileName = "MovementProfile")]
+    [CreateAssetMenu(menuName = "SpookyGame/Movement Profile", fileName = "MovementProfile")]
     public class MovementProfile : ScriptableObject
     {
         [Header("Ground Speeds (m/s)")]

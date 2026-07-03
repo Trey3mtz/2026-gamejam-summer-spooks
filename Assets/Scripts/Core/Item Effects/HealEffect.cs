@@ -1,20 +1,19 @@
 using UnityEngine;
 using System;
+using SpookyGame.Interfaces;
 
-namespace SpookyGame.Core.ItemEffects
+namespace SpookyGame.Core.Item_Effects
 {
     [Serializable]
     public class HealEffect : IItemEffect 
     {
-        public int HealAmount = 50;
+        public int HealAmount = 1;
 
         public void Execute(GameObject user, Vector3 targetPosition) 
         {
-            // Since we are running a Listen Server topology, 
-            // the Host will run this logic and update the user's networked health variable.
-            if (user.TryGetComponent(out HealthComponent health)) 
+            if (user.TryGetComponent(out HealthBar health)) 
             {
-                health.Heal(HealAmount);
+                health.ChangeHealth(HealAmount);
             }
         }
     }

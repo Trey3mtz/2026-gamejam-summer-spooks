@@ -1,4 +1,4 @@
-namespace SummerSpooks.Player.Data
+namespace SpookyGame.Player.Data
 {
     /// <summary>
     /// Buffered boolean input state held by the interpreter.
@@ -16,5 +16,20 @@ namespace SummerSpooks.Player.Data
         public bool Item;
         public bool Next;
         public bool Previous;
+        public bool Pause;
+
+        public void Reset()
+        {
+            MoveCanceled = false;
+            JumpPressed = false;
+            JumpReleased = false;
+            Sprint = false;
+            Crouch = false;
+            Interact = false;
+            Item = false;
+            Next = false;
+            Previous = false;
+            Pause = false;
+        }
     }
 }

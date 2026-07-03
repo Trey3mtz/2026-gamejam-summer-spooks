@@ -1,8 +1,9 @@
 using System;
 using System.Collections.Generic;
-using UnityEngine;
+using SpookyGame.Utilities;
 
-namespace SpookyGame
+
+namespace SpookyGame.Core.Item_System
 {
   [Serializable]
     public class Inventory 
@@ -12,7 +13,7 @@ namespace SpookyGame
 
         public class InventoryEntry
         {
-            public Item item;
+            public ItemDefinition item;
             public int stackSize;
         }
 
@@ -31,26 +32,26 @@ namespace SpookyGame
         }
 
         // This is for when you automatically suck up items.
-        public bool AddItem(Item newItem,  int amountAdd)
+        public bool AddItem(ItemDefinition newItem,  int amountAdd)
         {   
             bool foundSpace = false;
             int openSlot = _Inventory.FindIndex(e => e.item == null);
             
-            if(newItem.IsStackable())
+            if(newItem.IsStackable)
             {
                 bool isAlreadyInInventory = false;
                 int i=0;
                 foreach(InventoryEntry entry in _Inventory)
                 {
                     if(entry.item != null && !isAlreadyInInventory)
-                        if(entry.item.UniqueID == newItem.UniqueID && entry.stackSize < entry.item.MaxStackSize)
+                        if(entry.item.ItemID == newItem.ItemID && entry.stackSize < entry.item.MaxStackSize)
                         { 
                             if(entry.stackSize + amountAdd <= entry.item.MaxStackSize)
-                             {
+                            {
                                 entry.stackSize += amountAdd;
                                 isAlreadyInInventory = true;
                                 foundSpace = true;
-                             }   
+                            }   
                             else
                             {   // Find the amount spilled over the max, set the stacksize to the max, and do something with the left over
                                 int amountOver = entry.stackSize + amountAdd - entry.item.MaxStackSize; 
@@ -93,7 +94,7 @@ namespace SpookyGame
         }
 
         // This is for when you are choosing which slot to add an item into. Creates a new Entry and decides how it should be added.
-        public void AddItemAt(int entryIndex, Item newItem,  int amountAdd)
+        public void AddItemAt(int entryIndex, ItemDefinition newItem,  int amountAdd)
         {
             InventoryEntry newEntry = new InventoryEntry(){ item = newItem, stackSize = amountAdd};
 
@@ -102,7 +103,7 @@ namespace SpookyGame
                 _Inventory[entryIndex] = newEntry;
             else
             { 
-                if(_Inventory[entryIndex].item.UniqueID == newItem.UniqueID && newItem.IsStackable())
+                if(_Inventory[entryIndex].item.ItemID == newItem.ItemID && newItem.IsStackable)
                 {  
                     if(_Inventory[entryIndex].stackSize + amountAdd <= newItem.MaxStackSize)
                             _Inventory[entryIndex].stackSize += amountAdd;  
@@ -129,7 +130,7 @@ namespace SpookyGame
         // If oldIndex is not empty try to Add it somewhere else
         // oldIndex will get filled with the newIndex we want to place an item in
         // We place our DragDropItem into the newIndex
-        public void SwapIndex(int oldIndex, int newIndex, Item newitem, int amount)
+        public void SwapIndex(int oldIndex, int newIndex, ItemDefinition newitem, int amount)
         {  
             // Case where oldindex still has an item in it
             InventoryEntry edgecase = null;
@@ -235,9 +236,9 @@ namespace SpookyGame
                     return -1;                
                 else if(!entry_A.item && !entry_B.item)
                     return 0;
-                else if(entry_A.item.Type < entry_B.item.Type)
+                else if(entry_A.item.Category < entry_B.item.Category)
                     return -1;                
-                else if(entry_A.item.Type > entry_B.item.Type)
+                else if(entry_A.item.Category > entry_B.item.Category)
                     return 1;
                 
                 return 0;
@@ -255,8 +256,8 @@ namespace SpookyGame
                 {
                     data.Add(new InventorySaveData()
                     {
-                        ItemID = _Inventory[i].item.UniqueID,
-                        AmountHeld = _Inventory[i].stackSize                        
+                        ItemID = _Inventory[i].item.ItemID,
+                        AmountHeld = _Inventory[i].stackSize                    
                     });
                 }
                 else
@@ -272,18 +273,11 @@ namespace SpookyGame
             _Inventory.Clear();
             for(int i = 0; i < _Inventory.Capacity; i++)
             {
-                if (data[i].ItemID != null)
+                _Inventory.Add(new InventoryEntry()
                 {
-                    _Inventory.Add(new InventoryEntry()
-                     {
-                        //item = DataManager.Instance.ItemDatabase.GetFromID(data[i].ItemID),
-                        stackSize = data[i].AmountHeld
-                     });
-                }
-                else
-                {
-                   _Inventory.Add(new InventoryEntry());
-                }
+                    item = GameManager.Instance.ItemDatabase.GetFromID(data[i].ItemID),
+                    stackSize = data[i].AmountHeld
+                });
             }
         }
     }
@@ -291,7 +285,7 @@ namespace SpookyGame
 [Serializable]
 public class InventorySaveData
 {
-    public string ItemID;
+    public uint ItemID;
     public int AmountHeld;
 }
 }
