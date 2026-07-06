@@ -2,6 +2,7 @@ using SpookyGame.Core;
 using UnityEngine;
 using SpookyGame.Player.Data;
 using SpookyGame.Player.Configuration;
+using SpookyGame.Utilities;
 
 namespace SpookyGame.Player
 {
@@ -55,6 +56,9 @@ namespace SpookyGame.Player
 
         private void Update()
         {
+            if (GameManager.Instance.IsPaused)
+                return;
+            
             if (!_movementProfile)
                 return;
 

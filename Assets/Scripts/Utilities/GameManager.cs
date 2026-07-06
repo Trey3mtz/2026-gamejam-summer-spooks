@@ -1,3 +1,4 @@
+using System;
 using SpookyGame.Core.Item_System;
 using UnityEngine;
 
@@ -18,9 +19,38 @@ namespace SpookyGame.Utilities
                 Destroy(this);
             
             DontDestroyOnLoad(gameObject);
+            GameSettings.Load();
         }
 
         [Header("Lookup Tables")]
         public ItemDatabase ItemDatabase;
+        
+        
+        public bool IsPaused { get; private set; }
+        public event Action<bool> PauseChanged = delegate { };
+        
+        public void Pause()
+        {
+            if (IsPaused) return;
+            IsPaused = true;
+            Time.timeScale = 0f;
+            PauseChanged(true);
+        }
+ 
+        public void Resume()
+        {
+            if (!IsPaused) return;
+            IsPaused = false;
+            Time.timeScale = 1f;
+            GameSettings.Save(); // flush anything edited while the menu was open
+            PauseChanged(false);
+        }
+ 
+        public void TogglePause()
+        {
+            if (IsPaused) Resume();
+            else Pause();
+        }
+
     }
 }
