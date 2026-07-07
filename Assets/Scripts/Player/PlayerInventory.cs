@@ -115,6 +115,8 @@ namespace SpookyGame.Player
             return -1;
         }
 
-        
+        // --- Persistence ---
+        public void Save(ref List<InventorySaveData> data) => _inventory.Save(ref data);
+        public void Load(List<InventorySaveData> data)      => _inventory.Load(data);
     }
 }
