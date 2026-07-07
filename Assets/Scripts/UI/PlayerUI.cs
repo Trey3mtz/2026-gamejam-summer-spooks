@@ -26,5 +26,15 @@ namespace SpookyGame.UI
             _inventory.OnSelectionChanged -= HandleSelectionChanged;
             _inventory.InventoryChanged   -= RefreshIcons;
         }
+
+        private void HandleSelectionChanged()
+        {
+            
+        }
+
+        private void RefreshIcons()
+        {
+        
+        }
     }
 }
