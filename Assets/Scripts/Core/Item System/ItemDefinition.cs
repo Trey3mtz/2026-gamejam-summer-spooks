@@ -29,12 +29,29 @@ namespace SpookyGame.Core.Item_System
         [SerializeReference, SubclassPicker]
         public List<IItemEffect> Effects = new List<IItemEffect>();
 
+        // This is the call to use the item
+        public void Execute(GameObject user, Vector3 targetPosition)
+        {
+            foreach(var effect in Effect)
+                effect.Execute(user, targetPosition);
+        }
+        
+
         // Generate the hash automatically so you never have to type it.
         private void OnValidate()
         {
-            if (string.IsNullOrEmpty(ItemName)) return;
-            // Generate a deterministic integer from the name
-            ID = (uint)ItemName.GetHashCode(); 
+            if (string.IsNullOrEmpty(ItemName)) { ID = 0; return; }
+            ID = ComputeStableId(ItemName);
+        }
+        
+        // Deterministic FNV-1a. Unlike string.GetHashCode, stable across platforms/sessions,
+        // which the save system depends on.
+        private static uint ComputeStableId(string s)
+        {
+            const uint offset = 2166136261u, prime = 16777619u;
+            uint hash = offset;
+            foreach (char c in s) { hash ^= c; hash *= prime; }
+            return hash;
         }
     }
 
