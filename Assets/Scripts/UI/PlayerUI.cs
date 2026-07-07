@@ -23,6 +23,7 @@ namespace SpookyGame.UI
         [SerializeField] private float _nameFadeDuration = 1f;
         
         private PlayerInventory _inventory;
+        private Tween _nameTween;
         
         private void OnEnable()
         {
@@ -36,9 +37,12 @@ namespace SpookyGame.UI
         
         private void OnDisable()
         {
-            if (_inventory == null) return;
-            _inventory.OnSelectionChanged -= HandleSelectionChanged;
-            _inventory.InventoryChanged   -= RefreshIcons;
+            if (_inventory != null)
+            {
+                _inventory.OnSelectionChanged -= HandleSelectionChanged;
+                _inventory.InventoryChanged   -= RefreshIcons;
+            }
+            _nameTween?.Kill();
         }
 
         private void Start()
@@ -80,17 +84,22 @@ namespace SpookyGame.UI
         private void FlashItemName(ItemDefinition item)
         {
             if (_itemNameGroup == null || _itemNameLabel == null) return;
-
-            //if (_nameRoutine != null) StopCoroutine(_nameRoutine);
-
+        
+            _nameTween?.Kill();
+        
             if (item == null)
             {
                 _itemNameGroup.alpha = 0f;
                 return;
             }
-
+        
             _itemNameLabel.text = item.ItemName;
-            //_nameRoutine = StartCoroutine(NameFlashRoutine());
+            _itemNameGroup.alpha = 1f;                       // appear instantly
+        
+            _nameTween = _itemNameGroup.DOFade(0f, _nameFadeDuration)
+                .SetDelay(_nameHoldDelay)                    // hold fully visible first
+                .SetUpdate(true)                             // unscaled — survives a paused world
+                .SetLink(gameObject);                        // auto-kill if this object is destroyed
         }
     }
 }
