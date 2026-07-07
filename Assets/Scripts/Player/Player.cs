@@ -13,7 +13,7 @@ namespace SpookyGame.Player
         public HealthBar Health => _health;
         
         private Inventory _inventory;
-        public Inventory Inventory => _inventory;
+        public List<InventoryEntry> Inventory => _inventory.GetInventory();
         
         private Vector3 _lastRespawnPosition;
         
@@ -26,9 +26,49 @@ namespace SpookyGame.Player
         }
 
 
+        // ==========================================================
+        //  Inventory API
+        // ==========================================================
 
+        private int _selectedInventorySlot = 0;
+        private int _invItemCount => Inventory.Count;
+        private int _invCapacity => Inventory.Capacity;
+
+        public void SelectNextItem()
+        {
+            if(_invItemCount <= 0)
+                return;
+
+            int nextSlotIndex = _selectedInventorySlot + 1;
+            if(nextSlotIndex > _invItemCount)
+                nextSlotIndex = 0;
+        }
+ 
+        public void SelectPreviousItem()
+        {
+            if(_invItemCount <= 0)
+                return;
+
+            int prevSlotIndex = _selectedInventorySlot - 1;
+            if(prevSlotIndex < 0)
+                prevSlotIndex = _invItemCount;
+        }
+
+        public void SelectSpecificItem(int i)
+        {
+            if(_invItemCount <= 0)
+                return;
+        }
+
+        public bool TryUseItem()
+        {
+            
+            
+        }
         
-        
+        // ==========================================================
+        //  Saving & Loading
+        // ==========================================================
         
         public void Save(ref PlayerSaveData data)
         {                            
