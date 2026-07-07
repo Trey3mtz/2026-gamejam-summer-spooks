@@ -14,18 +14,23 @@ namespace SpookyGame.Player
         private int _selectedInventorySlot = 0;
         private int _invItemCount => Inventory.Count;
         private int _invCapacity => Inventory.Capacity;
+
+        // Events you can react to
+        public event Action<int> OnSelectionChanged;   // selected slot index
+        public event Action InventoryChanged;  
+        public event Action<ItemDefinition> OnItemUsed;
         
-  
+        public PlayerInventory()
+        {
+            _inventory.InitializeInventory();
+            _inventory.onInventoryChanged += (_, __) => InventoryChanged?.Invoke();
+        }
+        
         // ================================================================
         //  Inventory API
         // ================================================================
 
-        public List<Inventory.InventoryEntry> Inventory => _inventory.GetInventory();
-        
-        // react to selection and use without polling.
-        public event Action<int> OnSelectionChanged;
-        public event Action<ItemDefinition> OnItemUsed;
-           
+        public List<Inventory.InventoryEntry> Inventory => _inventory.GetInventory();               
         public ItemDefinition SelectedItem => SelectedEntry?.item;
         
         public int SelectedSlot => _selectedInventorySlot;
