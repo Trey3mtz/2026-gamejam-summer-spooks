@@ -1,10 +1,16 @@
-using UnityEngine;
-using SpookyGame.Core.ItemSystem;
+using System;
+using System.Collections.Generic;
+using SpookyGame.Core.Item_System;
+using SpookyGame.Interfaces;
+using SpookyGame.Player.Data;
 
 namespace SpookyGame.Player
 {
-    public class PlayerInventory : MonoBehavior
+    public class PlayerInventory
     {
+        private Inventory _inventory;
+        public Inventory Data => _inventory;
+
         private int _selectedInventorySlot = 0;
         private int _invItemCount => Inventory.Count;
         private int _invCapacity => Inventory.Capacity;
@@ -13,11 +19,22 @@ namespace SpookyGame.Player
         // ================================================================
         //  Inventory API
         // ================================================================
+
+        public List<Inventory.InventoryEntry> Inventory => _inventory.GetInventory();
         
         // react to selection and use without polling.
         public event Action<int> OnSelectionChanged;
         public event Action<ItemDefinition> OnItemUsed;
+           
+        public ItemDefinition SelectedItem => SelectedEntry?.item;
         
+        public int SelectedSlot => _selectedInventorySlot;
+        public int PreviousSlot => FindPopulatedSlot(_selectedInventorySlot, -1);
+        public int NextSlot     => FindPopulatedSlot(_selectedInventorySlot, +1);
+        
+        public void SelectNextItem()     => MoveSelection(+1);
+        public void SelectPreviousItem() => MoveSelection(-1);
+
         public Inventory.InventoryEntry SelectedEntry
         {
             get
@@ -28,19 +45,6 @@ namespace SpookyGame.Player
                 return entries[_selectedInventorySlot];
             }
         }
-        
-        public ItemDefinition SelectedItem => SelectedEntry?.item;
-
-
-        
-        public int SelectedSlot => _selectedInventorySlot;
-        public int PreviousSlot => FindPopulatedSlot(_selectedInventorySlot, -1);
-        public int NextSlot     => FindPopulatedSlot(_selectedInventorySlot, +1);
-        
-        public void SelectNextItem()     => MoveSelection(+1);
-        public void SelectPreviousItem() => MoveSelection(-1);
-
-
 
         public ItemDefinition ItemInSlot(int slot)
         {
@@ -57,7 +61,6 @@ namespace SpookyGame.Player
             SetSelected(index);
         }
 
-        
         public void TryUseItem()
         {
             var entry = SelectedEntry;
