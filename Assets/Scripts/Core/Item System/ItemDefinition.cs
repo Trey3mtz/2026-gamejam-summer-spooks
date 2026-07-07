@@ -17,7 +17,7 @@ namespace SpookyGame.Core.Item_System
         public Sprite Icon;
         [Tooltip("The prefab that will be spawned in the world before the player picks up this item.")]
         public GameObject WorldPrefab; 
-        public AudioClip UseSound;
+        public FMODUnity.EventReference UseSound;
 
         [Header("Data")]
         public bool IsStackable = true;
@@ -34,7 +34,14 @@ namespace SpookyGame.Core.Item_System
         {
             foreach(var effect in Effects)
                 effect.Execute(user, targetPosition);
-            // FMOD hook here <<<
+
+            // We check if the event is null (unassigned) before trying to play it to prevent errors in the console.
+            if (!UseSound.IsNull)
+            {
+                // PlayOneShot handles creating the instance, playing it, and releasing it automatically.
+                // Passing in targetPosition ensures 3D sounds spatialize correctly in the world.
+                FMODUnity.RuntimeManager.PlayOneShot(UseSound, targetPosition);
+            }
         }
         
 
