@@ -27,12 +27,14 @@ namespace SpookyGame.Player
         }
 
 
-        // ==========================================================
+        // ================================================================
         //  Inventory API
-        // ==========================================================
-        // UI / audio can react to selection and use without polling.
+        // ================================================================
+        
+        // react to selection and use without polling.
         public event Action<int> OnSelectionChanged;
         public event Action<ItemDefinition> OnItemUsed;
+        
         public Inventory.InventoryEntry SelectedEntry
         {
             get
@@ -86,7 +88,7 @@ namespace SpookyGame.Player
             OnSelectionChanged?.Invoke(_selectedInventorySlot);
         }
         
-        public bool TryUseItem()
+        public void TryUseItem()
         {
             var entry = SelectedEntry;
             if (entry?.item == null) return false;
@@ -98,13 +100,17 @@ namespace SpookyGame.Player
             
             if (item.Category == ItemType.Consumable)
                 _inventory.ConsumeItem(_selectedInventorySlot);
-            
-            return true;
         }
+
+        public void TryAddItem(ItemDefinition itemDef, int amount)
+        {
+            bool wasSuccessful = _inventory.AddItem(itemDef, amount);
+        }        
+
         
-        // ==========================================================
+        // ================================================================
         //  Saving & Loading
-        // ==========================================================
+        // ================================================================
         
         public void Save(ref PlayerSaveData data)
         {                            
