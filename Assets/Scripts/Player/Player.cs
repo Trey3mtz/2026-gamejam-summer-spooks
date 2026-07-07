@@ -42,6 +42,8 @@ namespace SpookyGame.Player
             int nextSlotIndex = _selectedInventorySlot + 1;
             if(nextSlotIndex > _invItemCount)
                 nextSlotIndex = 0;
+
+            _selectedInventorySlot = nextSlotIndex;
         }
  
         public void SelectPreviousItem()
@@ -52,12 +54,21 @@ namespace SpookyGame.Player
             int prevSlotIndex = _selectedInventorySlot - 1;
             if(prevSlotIndex < 0)
                 prevSlotIndex = _invItemCount;
+
+            _selectedInventorySlot = prevSlotIndex;
         }
 
         public void SelectSpecificItem(int i)
         {
             if(_invItemCount <= 0)
                 return;
+
+            if(i < 0)
+                i = 0;
+            if(i > _invItemCount)
+                i = _invItemCount;
+
+            _selectedInventorySlot = i;
         }
 
         public bool TryUseItem()
