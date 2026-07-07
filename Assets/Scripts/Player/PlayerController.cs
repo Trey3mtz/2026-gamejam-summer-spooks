@@ -139,10 +139,11 @@ namespace SpookyGame.Player
         private void HandleItemInput()
         {
             if (_player == null) return;
+            var inv = _player.Inventory;
         
-            if (_input.NextPressed)     _player.SelectNextItem();
-            if (_input.PreviousPressed) _player.SelectPreviousItem();
-            if (_input.ItemPressed)     _player.TryUseItem();
+            if (_input.NextPressed)     inv.SelectNextItem();
+            if (_input.PreviousPressed) inv.SelectPreviousItem();
+            if (_input.ItemPressed)     inv.TryUseItem();
         }
     }
 }
