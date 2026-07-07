@@ -6,6 +6,8 @@ namespace SpookyGame.UI
 {
     public class PlayerUI : MonoBehaviour
     {
+        [SerializeField] private Player _player;
+        
         private PlayerInventory _inventory;
         
         private void OnEnable()
