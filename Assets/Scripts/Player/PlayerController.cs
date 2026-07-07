@@ -29,6 +29,10 @@ namespace SpookyGame.Player
         private CharacterStatePayload _state;
         private int _tick;
 
+        // ================================================================
+        //  Unity Setup 
+        // ================================================================
+
         private void Awake()
         {
             _input = GetComponent<PlayerInputInterpreter>();
@@ -59,19 +63,29 @@ namespace SpookyGame.Player
         private void OnEnable() => _input.Subscribe();
         private void OnDisable() => _input.Unsubscribe();
 
-        private void Update()
+
+        // ================================================================
+        //  Update Callbacks 
+        // ================================================================
+        
+        // 1st
+        private void FixedUpdate()
         {
             if (GameManager.Instance.IsPaused)
-                return;
-            
-            if (!_movementProfile)
                 return;
 
             float dt = Time.deltaTime;
 
             // First, update our movement and camera.
-            UpdateLocomotion(dt);
-            
+            UpdateLocomotion(dt); 
+        }
+        
+        // 2nd
+        private void Update()
+        {
+            if (GameManager.Instance.IsPaused)
+                return;
+              
             // Check for non-locomotion inputs.
             HandleInteractInput();
             HandleItemInput();
@@ -79,6 +93,11 @@ namespace SpookyGame.Player
             // Lastly, Consume single-frame input edges.
             _input.EndFrame();
         }
+
+
+        // ================================================================
+        //  Helper Methods 
+        // ================================================================
 
         // Handle movement and camera rotation.
         private void UpdateLocomotion(float dt)
