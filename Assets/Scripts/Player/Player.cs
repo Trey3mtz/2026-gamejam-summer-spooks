@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using SpookyGame.Core;
 using SpookyGame.Core.Item_System;
@@ -13,7 +14,7 @@ namespace SpookyGame.Player
         public HealthBar Health => _health;
         
         private Inventory _inventory;
-        public List<InventoryEntry> Inventory => _inventory.GetInventory();
+        public List<Inventory.InventoryEntry> Inventory => _inventory.GetInventory();
         
         private Vector3 _lastRespawnPosition;
         
@@ -29,7 +30,9 @@ namespace SpookyGame.Player
         // ==========================================================
         //  Inventory API
         // ==========================================================
-        
+        // UI / audio can react to selection and use without polling.
+        public event Action<int> OnSelectionChanged;
+        public event Action<ItemDefinition> OnItemUsed;
         public Inventory.InventoryEntry SelectedEntry
         {
             get
@@ -85,7 +88,18 @@ namespace SpookyGame.Player
         
         public bool TryUseItem()
         {
-
+            var entry = SelectedEntry;
+            if (entry?.item == null) return false;
+            ItemDefinition item = entry.item;
+            // targetPosition is provided for effects that need a world point (spawns, throws).
+            Vector3 target = transform.position;
+            
+            item.Execute(gameObject, target);
+            
+            if (item.Category == ItemType.Consumable)
+                _inventory.ConsumeItem(_selectedInventorySlot);
+            
+            return true;
         }
         
         // ==========================================================

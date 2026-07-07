@@ -32,8 +32,9 @@ namespace SpookyGame.Core.Item_System
         // This is the call to use the item
         public void Execute(GameObject user, Vector3 targetPosition)
         {
-            foreach(var effect in Effect)
+            foreach(var effect in Effects)
                 effect.Execute(user, targetPosition);
+            // FMOD hook here <<<
         }
         
 
