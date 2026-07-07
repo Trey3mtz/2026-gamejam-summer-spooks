@@ -21,6 +21,8 @@ namespace SpookyGame.Player
         [Tooltip("Optional. Found on this GameObject if left empty.")]
         [SerializeField] private PlayerLook _look;
         [SerializeField] private InteractableSensor _interactableSensor;
+        [Tooltip("Owning Player. Found on this GameObject if left empty.")]
+        [SerializeField] private Player _player;
 
         private PlayerInputInterpreter _input;
         private CapsuleCollider _capsule;
@@ -39,6 +41,9 @@ namespace SpookyGame.Player
                 int groundWall = LayerMask.GetMask("GroundWall");
                 _groundMask = groundWall != 0 ? groundWall : LayerMask.GetMask("Default");
             }
+            
+            if (_player == null)
+                _player = GetComponent<Player>(); 
 
             _state = new CharacterStatePayload
             {
@@ -67,8 +72,9 @@ namespace SpookyGame.Player
             // First, update our movement and camera.
             UpdateLocomotion(dt);
             
-            // Then, check for other non-movement inputs.
+            // Check for non-locomotion inputs.
             HandleInteractInput();
+            HandleItemInput();
             
             // Lastly, Consume single-frame input edges.
             _input.EndFrame();
@@ -110,6 +116,14 @@ namespace SpookyGame.Player
             if(_input.InteractPressed)
                 _interactableSensor.TryInteract();
         }
-
+        
+        private void HandleItemInput()
+        {
+            if (_player == null) return;
+        
+            if (_input.NextPressed)     _player.SelectNextItem();
+            if (_input.PreviousPressed) _player.SelectPreviousItem();
+            if (_input.ItemPressed)     _player.TryUseItem();
+        }
     }
 }
