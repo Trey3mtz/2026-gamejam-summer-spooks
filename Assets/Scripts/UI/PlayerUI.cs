@@ -1,6 +1,7 @@
 using UnityEngine;
 using SpookyGame.Player;
 using SpookyGame.Core.ItemSystem;
+using DG.Tweening;
 
 namespace SpookyGame.UI
 {
