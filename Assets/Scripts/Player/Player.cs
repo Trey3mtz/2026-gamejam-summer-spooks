@@ -52,28 +52,43 @@ namespace SpookyGame.Player
         private int _invItemCount => Inventory.Count;
         private int _invCapacity => Inventory.Capacity;
         
+        public int SelectedSlot => _selectedInventorySlot;
+        public int PreviousSlot => FindPopulatedSlot(_selectedInventorySlot, -1);
+        public int NextSlot     => FindPopulatedSlot(_selectedInventorySlot, +1);
+        
         public void SelectNextItem()     => MoveSelection(+1);
         public void SelectPreviousItem() => MoveSelection(-1);
 
         /// <summary>Advances to the next non-empty slot in the given direction, wrapping.</summary>
         private void MoveSelection(int direction)
         {
-            var entries = _inventory.GetInventory();
-            int count = entries.Count;
-            if (count == 0) return;
-
-            for (int step = 1; step <= count; step++)
-            {
-                int idx = (((_selectedInventorySlot + direction * step) % count) + count) % count;
-                if (entries[idx].item != null)
-                {
-                    SetSelected(idx);
-                    return;
-                }
-            }
-            // Nothing to select; leave selection unchanged.
+            int idx = FindPopulatedSlot(_selectedInventorySlot, direction);
+            if (idx >= 0) SetSelected(idx);
         }
 
+        /// <summary>Next non-empty slot from `fromSlot` in `direction`, wrapping. -1 if none.</summary>
+        private int FindPopulatedSlot(int fromSlot, int direction)
+        {
+            var entries = _inventory.GetInventory();
+            int count = entries.Count;
+            if (count == 0) return -1;
+        
+            for (int step = 1; step <= count; step++)
+            {
+                int idx = (((fromSlot + direction * step) % count) + count) % count;
+                if (entries[idx].item != null)
+                    return idx;
+            }
+            return -1;
+        }
+
+        public ItemDefinition ItemInSlot(int slot)
+        {
+            var entries = _inventory.GetInventory();
+            if (slot < 0 || slot >= entries.Count) return null;
+            return entries[slot].item;
+        }
+        
         /// <summary>Selects a raw slot index (number keys / UI clicks), empty or not.</summary>
         public void SelectSpecificItem(int index)
         {
