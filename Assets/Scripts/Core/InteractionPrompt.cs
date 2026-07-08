@@ -5,7 +5,7 @@ using DG.Tweening;
 namespace SpookyGame.Core
 {
     ///<Summary>
-    /// This is a member of NetworkInteractable. It's simply a class managing the fade in-out of text.   
+    /// This is a member of Interactable. It's simply a class managing the fade in-out of text.   
     ///</Summary>
     [RequireComponent(typeof(TextMeshPro))]
     public class InteractionPrompt : MonoBehaviour
