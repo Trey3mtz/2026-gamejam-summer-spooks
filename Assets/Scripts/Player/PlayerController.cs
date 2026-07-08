@@ -2,6 +2,7 @@ using SpookyGame.Core;
 using UnityEngine;
 using SpookyGame.Player.Data;
 using SpookyGame.Player.Configuration;
+using SpookyGame.Player.CameraFX;
 using SpookyGame.Utilities;
 
 namespace SpookyGame.Player
