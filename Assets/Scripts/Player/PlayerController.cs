@@ -92,7 +92,11 @@ namespace SpookyGame.Player
             // Look runs at render rate so smoothing stays fluid and per-frame
             // mouse deltas are consumed exactly once per frame.
             if (_look)
+            {
                 _look.Tick(_input.LookInput, _input.CurrentDevice, Time.deltaTime);
+                if (_cameraRig)
+                    _cameraRig.SetLookLag(_look.LookLag.x);
+            }
             
             // Check for non-locomotion inputs.
             HandleInteractInput();
