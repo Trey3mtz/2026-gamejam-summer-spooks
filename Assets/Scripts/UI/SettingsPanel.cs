@@ -16,11 +16,12 @@ namespace SpookyGame.UI
     /// </summary>
     public class SettingsPanel : MonoBehaviour
     {
-        [Header("Controls")]
+        [Header("Camera")]
         [SerializeField] private Slider _sensitivity;
         [SerializeField] private Toggle _invertY;
         [SerializeField] private float _minSensitivity = 0.02f;
         [SerializeField] private float _maxSensitivity = 0.5f;
+        [SerializeField] private TMP_Dropdown _dynamicCamera;
 
         [Header("Audio")]
         [SerializeField] private Slider _master;
@@ -49,6 +50,11 @@ namespace SpookyGame.UI
 
             _invertY.SetIsOnWithoutNotify(GameSettings.InvertY);
             _invertY.onValueChanged.AddListener(GameSettings.SetInvertY);
+            
+            _dynamicCamera.ClearOptions();
+            _dynamicCamera.AddOptions(new List<string> { "Off", "Lite", "On" });
+            _dynamicCamera.SetValueWithoutNotify((int)GameSettings.DynamicCamera);
+            _dynamicCamera.onValueChanged.AddListener(GameSettings.SetDynamicCamera);
         }
 
         private void InitAudio()
