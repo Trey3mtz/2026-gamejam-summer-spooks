@@ -23,6 +23,8 @@ namespace SpookyGame.Player
         [SerializeField] private InteractableSensor _interactableSensor;
         [Tooltip("Owning Player. Found on this GameObject if left empty.")]
         [SerializeField] private Player _player;
+        [Tooltip("Procedural camera motion (bob, impacts). Optional; skipped if unassigned.")]
+        [SerializeField] private CameraRig _cameraRig;
 
         private PlayerInputInterpreter _input;
         private CapsuleCollider _capsule;
@@ -101,11 +103,7 @@ namespace SpookyGame.Player
 
         // Handle movement and camera rotation.
         private void UpdateLocomotion(float dt)
-        {
-            // Look first so movement is relative to the freshly-rotated body.
-            if (_look)
-                _look.Tick(_input.LookInput, _input.CurrentDevice);
-            
+        {            
             Vector2 move = _input.MovementInput;
             Vector3 worldMove = transform.right * move.x + transform.forward * move.y;
             worldMove.y = 0f;
@@ -128,6 +126,19 @@ namespace SpookyGame.Player
             _state.Position = transform.position; // resync in case something else moved us
             _state = PlayerPhysics3D.Simulate(_state, cmd, _movementProfile, _capsule, _groundMask);
             transform.position = _state.Position;
+
+            // Feed the camera systems a snapshot of the fresh state.
+            if (_cameraRig)
+            {
+                _cameraRig.SetMotionData(new CameraMotionData
+                {
+                    PlanarSpeed = new Vector2(_state.Velocity.x, _state.Velocity.z).magnitude,
+                    VerticalVelocity = _state.Velocity.y,
+                    Grounded = _state.Grounded,
+                    Sprinting = _input.SprintHeld,
+                    Crouching = _input.CrouchHeld
+                });
+            }
         }
 
         private void HandleInteractInput()
