@@ -7,6 +7,7 @@ namespace SpookyGame.Core.Interactables
     public class WorldItem : Interactable
     {
         [SerializeField] private ItemDefinition _itemDef;
+        // NOTE: Look at Interactable.cs for the rest of the members
         
         public override bool CanInteract(GameObject interactor)
         {
@@ -16,7 +17,7 @@ namespace SpookyGame.Core.Interactables
         // ReSharper disable Unity.PerformanceAnalysis
         public override void Interact(GameObject interactor)
         {
-            var player = interactor.TryGetComponent<Player>();
+            var player = interactor.TryGetComponent<Player.Player>();
             if(!player) return;
             
             Debug.Log("Interacting with " + gameObject.name);
@@ -24,7 +25,7 @@ namespace SpookyGame.Core.Interactables
             
             if(wasSuccessful)
             {
-            
+                HidePrompt();
             }
         }
     }
