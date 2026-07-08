@@ -97,7 +97,11 @@ namespace SpookyGame.Player
             // Check for non-locomotion inputs.
             HandleInteractInput();
             HandleItemInput();
-            
+        }
+
+        // 3rd
+        private void LateUpdate()
+        {            
             // Lastly, Consume single-frame input edges.
             _input.EndFrame();
         }
