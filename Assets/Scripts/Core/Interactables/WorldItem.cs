@@ -8,6 +8,29 @@ namespace SpookyGame.Core.Interactables
     {
         [SerializeField] private ItemDefinition _itemDef;
         // NOTE: Look at Interactable.cs for the rest of the members
+
+        private void Awake()
+        {
+            Validate();
+        }
+
+        private void Validate()
+        {
+            // 1. Search the hierarchy
+            // Passing 'true' tells Unity to include inactive GameObjects in the search.
+            TextMeshPro childTextComponent = TryGetComponentInChildren<TextMeshPro>(true);
+            // 2. Validate the data
+            if (childTextComponent == null)
+            {
+                // 3. Fail loudly
+                Debug.LogError($"[Structural Error] {gameObject.name} requires a TextMeshPro component in its children, but none was found. Please update the prefab.", gameObject);
+                
+                // 4. Prevent further errors
+                enabled = false; 
+                return;
+            }
+        }
+        
         
         public override bool CanInteract(GameObject interactor)
         {
