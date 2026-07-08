@@ -144,10 +144,12 @@ namespace SpookyGame.Player
             // Feed the camera systems a snapshot of the fresh state.
             if (_cameraRig)
             {
+                Vector3 v = _state.Velocity;
                 _cameraRig.SetMotionData(new CameraMotionData
                 {
-                    PlanarSpeed = new Vector2(_state.Velocity.x, _state.Velocity.z).magnitude,
-                    VerticalVelocity = _state.Velocity.y,
+                    PlanarSpeed = new Vector2(v.x, v.z).magnitude,
+                    LateralSpeed = Vector3.Dot(v, transform.right),   // signed, local X
+                    VerticalVelocity = v.y,
                     Grounded = _state.Grounded,
                     Sprinting = _input.SprintHeld,
                     Crouching = _input.CrouchHeld
