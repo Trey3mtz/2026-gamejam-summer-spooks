@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SpookyGame.Core.Item_System;
+using UnityEngine;
 using SpookyGame.Interfaces;
 using SpookyGame.Player.Data;
 
@@ -22,6 +23,7 @@ namespace SpookyGame.Player
         
         public PlayerInventory()
         {
+            _inventory = new Inventory();
             _inventory.InitializeInventory();
             _inventory.onInventoryChanged += (_, __) => InventoryChanged?.Invoke();
         }
@@ -66,13 +68,13 @@ namespace SpookyGame.Player
             SetSelected(index);
         }
 
-        public void TryUseItem()
+        public void TryUseItem(GameObject gameObject)
         {
             var entry = SelectedEntry;
-            if (entry?.item == null) return false;
+            if (!entry?.item) return;
             ItemDefinition item = entry.item;
             // targetPosition is provided for effects that need a world point (spawns, throws).
-            Vector3 target = transform.position;
+            Vector3 target = gameObject.transform.position;
             
             item.Execute(gameObject, target);
             

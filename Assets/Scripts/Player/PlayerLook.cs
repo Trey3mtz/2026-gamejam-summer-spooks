@@ -72,9 +72,9 @@ namespace SpookyGame.Player
         /// </summary>
         public void Tick(Vector2 lookDelta, ControlDeviceType deviceType, float dt)
         {
-            if (Cursor.lockState != CursorLockMode.Locked)
-                return;
- 
+            // if (Cursor.lockState != CursorLockMode.Locked)
+            //     return;
+            
             // Mouse deltas are per-frame displacements; gamepad sticks are a rate
             // and must be scaled by dt to stay framerate-independent.
             float yawDelta, pitchDelta;

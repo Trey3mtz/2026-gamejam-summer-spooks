@@ -785,8 +785,9 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 1941354573}
   - {fileID: 2095948483}
+  - {fileID: 516745604}
+  - {fileID: 1169771735}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &514480520
@@ -820,6 +821,8 @@ MonoBehaviour:
     m_Bits: 8
   _look: {fileID: 514480522}
   _interactableSensor: {fileID: 2095948484}
+  _player: {fileID: 514480524}
+  _cameraRig: {fileID: 1371574305}
 --- !u!114 &514480522
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -832,12 +835,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 161d89ffc9e34c57bc0dfe10ecbede9b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _cameraPivot: {fileID: 1941354573}
-  _sensitivity: 0.08
+  _cameraPivot: {fileID: 516745604}
+  _aimTarget: {fileID: 1169771735}
+  _lookSharpness: 16
   _invertY: 0
+  _mouseSensitivity: 0.12
+  _gamepadSensitivity: 180
   _minPitch: -85
   _maxPitch: 85
-  _lockCursorOnPlay: 1
 --- !u!114 &514480523
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -862,6 +867,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 937cb4ecfcfe40248a42cdc2c1e91d1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.Player
+--- !u!1 &516745603
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 516745604}
+  m_Layer: 10
+  m_Name: CameraPivot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &516745604
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 516745603}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1371574304}
+  m_Father: {fileID: 514480509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &710005845
 GameObject:
   m_ObjectHideFlags: 0
@@ -1175,6 +1212,102 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.Interactables.InteractableTEST
   interactionPrompt: {fileID: 10484671}
   promptText: Press [E] to Interact
+--- !u!1 &1169771734
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1169771735}
+  m_Layer: 10
+  m_Name: AimTarget
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1169771735
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1169771734}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 514480509}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1371574303
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1371574304}
+  - component: {fileID: 1371574305}
+  m_Layer: 10
+  m_Name: CameraBobRoot
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1371574304
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371574303}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 1941354573}
+  m_Father: {fileID: 516745604}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1371574305
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1371574303}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fb10794bc4813bc4ab31e6db7affee12, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.CameraFX.CameraRig
+  _headBob:
+    _walkAmplitude: 0.035
+    _sprintAmplitude: 0.075
+    _crouchAmplitude: 0.02
+    _walkFrequency: 1.7
+    _sprintFrequency: 2.5
+    _crouchFrequency: 1.2
+    _lateralRatio: 0.6
+    _rollDegrees: 0.4
+    _idleAmplitude: 0.007
+    _idleFrequency: 0.22
+    _referenceSpeed: 3
+    _blendSharpness: 8
+  _verticalSpring:
+    _stiffness: 160
+    _damping: 16
+  _landImpulseScale: 0.15
+  _maxLandImpulse: 2
+  _jumpImpulse: 0.4
+  _impactPitchPerMeter: 40
 --- !u!1 &1472302565
 GameObject:
   m_ObjectHideFlags: 0
@@ -1451,8 +1584,8 @@ GameObject:
   m_Component:
   - component: {fileID: 1941354573}
   - component: {fileID: 1941354572}
-  - component: {fileID: 1941354571}
   - component: {fileID: 1941354574}
+  - component: {fileID: 1941354575}
   m_Layer: 0
   m_Name: Main Camera
   m_TagString: MainCamera
@@ -1460,14 +1593,6 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
---- !u!81 &1941354571
-AudioListener:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1941354570}
-  m_Enabled: 1
 --- !u!20 &1941354572
 Camera:
   m_ObjectHideFlags: 0
@@ -1527,12 +1652,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1941354570}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0.6, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 514480509}
+  m_Father: {fileID: 1371574304}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &1941354574
 MonoBehaviour:
@@ -1578,6 +1703,20 @@ MonoBehaviour:
     m_VarianceClampScale: 0.9
     m_ContrastAdaptiveSharpening: 0
   m_Version: 2
+--- !u!114 &1941354575
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1941354570}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 86c6556701af9e04380698b89f691b6e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: FMODUnity::FMODUnity.StudioListener
+  nonRigidbodyVelocity: 0
+  attenuationObject: {fileID: 0}
 --- !u!1 &2068801324
 GameObject:
   m_ObjectHideFlags: 0

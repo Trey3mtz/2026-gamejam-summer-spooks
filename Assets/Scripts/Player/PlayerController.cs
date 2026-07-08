@@ -88,7 +88,12 @@ namespace SpookyGame.Player
         {
             if (GameManager.Instance.IsPaused)
                 return;
-              
+            
+            // Look runs at render rate so smoothing stays fluid and per-frame
+            // mouse deltas are consumed exactly once per frame.
+            if (_look)
+                _look.Tick(_input.LookInput, _input.CurrentDevice, Time.deltaTime);
+            
             // Check for non-locomotion inputs.
             HandleInteractInput();
             HandleItemInput();
@@ -150,12 +155,12 @@ namespace SpookyGame.Player
         
         private void HandleItemInput()
         {
-            if (_player == null) return;
+            if (!_player) return;
             var inv = _player.Inventory;
         
             if (_input.NextPressed)     inv.SelectNextItem();
             if (_input.PreviousPressed) inv.SelectPreviousItem();
-            if (_input.ItemPressed)     inv.TryUseItem();
+            if (_input.ItemPressed)     inv.TryUseItem(gameObject);
         }
     }
 }

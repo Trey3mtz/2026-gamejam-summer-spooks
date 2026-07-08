@@ -22,7 +22,7 @@ namespace SpookyGame.Player
             _health = new HealthBar();
             _health.InitHealthBar(10);
             
-            _inventory = new PlayerInventory();
+            Inventory = new PlayerInventory();
             _lastRespawnPosition = transform.position;
         }
 
@@ -34,7 +34,7 @@ namespace SpookyGame.Player
         public void Save(ref PlayerSaveData data)
         {                            
             data.Inventory = new List<InventorySaveData>();         // Wipe previous saved inventory, save current inventory
-            _inventory.Save(ref data.Inventory);
+            Inventory.Save(ref data.Inventory);
 
             data.Position = _lastRespawnPosition;
             data.MaxHealth = _health.MaxHp;
@@ -43,7 +43,7 @@ namespace SpookyGame.Player
 
         public void Load(PlayerSaveData data)
         {
-            _inventory.Load(data.Inventory);
+            Inventory.Load(data.Inventory);
 
             _lastRespawnPosition = data.Position;
             _health.InitHealthBar(data.MaxHealth);

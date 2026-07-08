@@ -1,13 +1,15 @@
 using UnityEngine;
 using SpookyGame.Player;
-using SpookyGame.Core.ItemSystem;
+using SpookyGame.Core.Item_System;
 using DG.Tweening;
+using TMPro;
+using UnityEngine.UI;
 
 namespace SpookyGame.UI
 {
     public class PlayerUI : MonoBehaviour
     {
-        [SerializeField] private Player _player;
+        [SerializeField] private Player.Player _player;
         
         [Header("Selection Cycle (bottom-left)")]
         [SerializeField] private Image _previousIcon;
