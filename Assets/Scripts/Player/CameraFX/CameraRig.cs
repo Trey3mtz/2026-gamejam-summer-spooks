@@ -22,7 +22,8 @@ namespace SpookyGame.Player.CameraFX
     public class CameraRig : MonoBehaviour
     {
         [SerializeField] private HeadBob _headBob = new HeadBob();
-
+        [SerializeField] private LookLean _lean = new LookLean();
+        
         [Header("Impacts")]
         [SerializeField] private CameraSpring _verticalSpring = new CameraSpring();
         [Tooltip("Camera velocity (m/s) imparted per m/s of landing fall speed.")]
@@ -42,6 +43,9 @@ namespace SpookyGame.Player.CameraFX
         private Quaternion _baseRotation;
         private bool _bobEnabled = true;
 
+        private float _lookLagYaw;
+        private DynamicCameraMode _mode = DynamicCameraMode.On;
+
         private void Awake()
         {
             _basePosition = transform.localPosition;
@@ -51,14 +55,15 @@ namespace SpookyGame.Player.CameraFX
         private void OnEnable()
         {
             RefreshSettings();
-            // TODO(settings): GameSettings.ControlsChanged/VideoChanged += RefreshSettings;
+            GameSettings.VideoChanged += RefreshSettings;
         }
 
         private void OnDisable()
         {
-            // TODO(settings): GameSettings.ControlsChanged/VideoChanged -= RefreshSettings;
+            GameSettings.VideoChanged -= RefreshSettings;
             _headBob.ResetState();
             _verticalSpring.ResetState();
+            _lean.ResetState();
             transform.localPosition = _basePosition;
             transform.localRotation = _baseRotation;
         }
@@ -77,11 +82,10 @@ namespace SpookyGame.Player.CameraFX
         /// </summary>
         public void AddVerticalImpulse(float velocity) => _verticalSpring.AddImpulse(velocity);
 
-        /// <summary>Re-reads user settings. Wire to the GameSettings change event.</summary>
-        public void RefreshSettings()
-        {
-            // TODO(settings): _bobEnabled = GameSettings.HeadBobEnabled;
-        }
+        /// <summary>Called by PlayerController each rendered frame after PlayerLook ticks.</summary>
+        public void SetLookLag(float yawLagDegrees) => _lookLagYaw = yawLagDegrees;
+        
+        public void RefreshSettings() => _mode = GameSettings.DynamicCamera;
 
         private void DetectGroundTransitions(in CameraMotionData data)
         {
@@ -107,26 +111,49 @@ namespace SpookyGame.Player.CameraFX
         {
             if (!_hasMotion)
                 return;
-
+        
+            if (_mode == DynamicCameraMode.Off)
+            {
+                _headBob.ResetState();
+                _verticalSpring.ResetState();
+                _lean.ResetState();
+                transform.localPosition = _basePosition;
+                transform.localRotation = _baseRotation;
+                return;
+            }
+        
+            bool full = _mode == DynamicCameraMode.On;
+            float intensity = full ? 1f : 0.5f;   // Lite damps everything that remains by half
+        
             float dt = Time.deltaTime;
             _verticalSpring.Tick(dt);
-
-            Vector3 positionOffset = Vector3.up * _verticalSpring.Value;
-            // Spring compression (negative value) tips the camera down slightly,
-            // selling the impact as a nod rather than an elevator drop.
-            Quaternion rotationOffset = Quaternion.Euler(-_verticalSpring.Value * _impactPitchPerMeter, 0f, 0f);
-
-            if (_bobEnabled)
+        
+            float springValue = _verticalSpring.Value * intensity;
+            Vector3 positionOffset = Vector3.up * springValue;
+            Quaternion rotationOffset = Quaternion.Euler(-springValue * _impactPitchPerMeter, 0f, 0f);
+        
+            if (full)
             {
-                _headBob.Tick(in _motion, dt);
-                positionOffset += _headBob.PositionOffset;
-                rotationOffset = _headBob.RotationOffset * rotationOffset;
+                if (_bobEnabled)
+                {
+                    _headBob.Tick(in _motion, dt);
+                    positionOffset += _headBob.PositionOffset;
+                    rotationOffset = _headBob.RotationOffset * rotationOffset;
+                }
+                else
+                {
+                    _headBob.ResetState();
+                }
+        
+                _lean.Tick(_lookLagYaw, dt);
+                rotationOffset = _lean.RotationOffset * rotationOffset;
             }
             else
             {
                 _headBob.ResetState();
+                _lean.ResetState();
             }
-
+        
             transform.localPosition = _basePosition + positionOffset;
             transform.localRotation = _baseRotation * rotationOffset;
         }
