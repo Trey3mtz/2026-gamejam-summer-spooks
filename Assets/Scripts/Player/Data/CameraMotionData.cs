@@ -13,6 +13,9 @@ namespace SpookyGame.Player.Data
         /// <summary>Signed vertical velocity in m/s. Negative while falling.</summary>
         public float VerticalVelocity;
 
+        /// <summary>Signed sideways speed in m/s, in the player's local frame. Positive = strafing right.</summary>
+        public float LateralSpeed;
+
         public bool Grounded;
         public bool Sprinting;
         public bool Crouching;
