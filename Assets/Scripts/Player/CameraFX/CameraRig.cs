@@ -145,8 +145,9 @@ namespace SpookyGame.Player.CameraFX
                     _headBob.ResetState();
                 }
         
-                _lean.Tick(_lookLagYaw, dt);
+                _lean.Tick(_lookLagYaw, in _motion, dt);
                 rotationOffset = _lean.RotationOffset * rotationOffset;
+                positionOffset += _lean.PositionOffset;
             }
             else
             {
