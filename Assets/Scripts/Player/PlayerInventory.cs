@@ -82,9 +82,10 @@ namespace SpookyGame.Player
                 _inventory.ConsumeItem(_selectedInventorySlot);
         }
 
-        public void TryAddItem(ItemDefinition itemDef, int amount = 1)
+        public bool TryAddItem(ItemDefinition itemDef, int amount = 1)
         {
             bool wasSuccessful = _inventory.AddItem(itemDef, amount);
+            return wasSuccessful;
         }        
 
 
