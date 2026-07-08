@@ -30,7 +30,10 @@ namespace SpookyGame.Player
         [Header("Pitch Limits")]
         [SerializeField] private float _minPitch = -85f;
         [SerializeField] private float _maxPitch = 85f;
- 
+
+        [Header("Cursor")]
+        [SerializeField] private bool _lockCursorOnPlay = true;
+        
         private float _targetYaw, _targetPitch;   // where input says to look (drives AimTarget)
         private float _yaw, _pitch;               // smoothed values applied to body/pivot
  
@@ -48,12 +51,14 @@ namespace SpookyGame.Player
  
         private void OnEnable()
         {
+            if (_lockCursorOnPlay) LockCursor(true);
             RefreshSettings();
             // TODO(settings): GameSettings.ControlsChanged += RefreshSettings;
         }
  
         private void OnDisable()
         {
+            LockCursor(false);
             // TODO(settings): GameSettings.ControlsChanged -= RefreshSettings;
         }
  
@@ -72,8 +77,8 @@ namespace SpookyGame.Player
         /// </summary>
         public void Tick(Vector2 lookDelta, ControlDeviceType deviceType, float dt)
         {
-            // if (Cursor.lockState != CursorLockMode.Locked)
-            //     return;
+             if (Cursor.lockState != CursorLockMode.Locked)
+                 return;
             
             // Mouse deltas are per-frame displacements; gamepad sticks are a rate
             // and must be scaled by dt to stay framerate-independent.
@@ -116,6 +121,12 @@ namespace SpookyGame.Player
             // local yaw is the remaining lag; pitch is applied directly.
             if (_aimTarget != null)
                 _aimTarget.localRotation = Quaternion.Euler(_targetPitch, _targetYaw - _yaw, 0f);
+        }
+
+        private static void LockCursor(bool locked)
+        {
+            Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
+            Cursor.visible = !locked;
         }
  
         private static float NormalizePitch(float euler) => euler > 180f ? euler - 360f : euler;
