@@ -18,9 +18,14 @@ namespace SpookyGame.Core.Interactables
         {
             var player = interactor.TryGetComponent<Player>();
             if(!player) return;
+            
             Debug.Log("Interacting with " + gameObject.name);
-          
-            player.Inventory.TryAddItem(_itemDef);
+            var wasSuccessful = player.Inventory.TryAddItem(_itemDef);
+            
+            if(wasSuccessful)
+            {
+            
+            }
         }
     }
 }
