@@ -3,6 +3,8 @@ using UnityEngine;
 
 namespace SpookyGame.Utilities
 {
+    public enum DynamicCameraMode { Off = 0, Lite = 1, On = 2 }
+
     /// <summary>
     /// Central, PlayerPrefs-backed settings store. Systems read the typed properties and
     /// subscribe to the *Changed events to react. Audio values are stored as linear 0..1
@@ -13,6 +15,7 @@ namespace SpookyGame.Utilities
     public static class GameSettings
     {
         // --- Controls ---
+        public static DynamicCameraMode DynamicCamera { get; private set; }
         public static float LookSensitivity { get; private set; }
         public static bool  InvertY         { get; private set; }
 
@@ -33,6 +36,7 @@ namespace SpookyGame.Utilities
 
         public static void Load()
         {
+            DynamicCamera = (DynamicCameraMode)PlayerPrefs.GetInt(K_DynamicCam, (int)DynamicCameraMode.On);
             LookSensitivity = PlayerPrefs.GetFloat(K_Sensitivity, 0.12f);
             InvertY         = PlayerPrefs.GetInt(K_InvertY, 0) == 1;
 
@@ -50,6 +54,13 @@ namespace SpookyGame.Utilities
         }
 
         // --- Controls ---
+        public static void SetDynamicCamera(int mode)
+        {
+            DynamicCamera = (DynamicCameraMode)Mathf.Clamp(mode, 0, 2);
+            PlayerPrefs.SetInt(K_DynamicCam, (int)DynamicCamera);
+            VideoChanged();
+        }
+        
         public static void SetLookSensitivity(float value)
         {
             LookSensitivity = Mathf.Max(0.001f, value);
@@ -120,6 +131,7 @@ namespace SpookyGame.Utilities
             VideoChanged();
         }
 
+        private const string K_DynamicCam = "set.video.dynamicCamera";
         private const string K_Sensitivity = "set.look.sensitivity";
         private const string K_InvertY     = "set.look.invertY";
         private const string K_Master      = "set.audio.master";
