@@ -1,6 +1,7 @@
 using UnityEngine;
 using SpookyGame.Core.Item_System;
 using SpookyGame.Player;
+using TMPro;
 
 namespace SpookyGame.Core.Interactables
 {
