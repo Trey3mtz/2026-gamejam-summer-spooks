@@ -70,15 +70,8 @@ namespace SpookyGame.Player
         // ================================================================
         //  Update Callbacks 
         // ================================================================
-        
-        // 1st
-        private void FixedUpdate()
-        {
-            if (GameManager.Instance.IsPaused)
-                return;
 
-
-        }
+        // 1st FixedUpdate() would be here
         
         // 2nd
         private void Update()
