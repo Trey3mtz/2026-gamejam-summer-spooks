@@ -19,7 +19,7 @@ namespace SpookyGame.Core.Interactables
         {
             // 1. Search the hierarchy
             // Passing 'true' tells Unity to include inactive GameObjects in the search.
-            TextMeshPro childTextComponent = TryGetComponentInChildren<TextMeshPro>(true);
+            TextMeshPro childTextComponent = GetComponentInChildren<TextMeshPro>();
             // 2. Validate the data
             if (childTextComponent == null)
             {
@@ -41,7 +41,7 @@ namespace SpookyGame.Core.Interactables
         // ReSharper disable Unity.PerformanceAnalysis
         public override void Interact(GameObject interactor)
         {
-            var player = interactor.TryGetComponent<Player.Player>();
+            var player = interactor.GetComponent<Player.Player>();
             if(!player) return;
             
             Debug.Log("Interacting with " + gameObject.name);

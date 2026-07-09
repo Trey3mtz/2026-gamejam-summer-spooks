@@ -1,5 +1,6 @@
 using UnityEngine;
 using SpookyGame.Player.Data;
+using SpookyGame.Utilities;
 
 namespace SpookyGame.Player.CameraFX
 {

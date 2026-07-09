@@ -1,4 +1,5 @@
 using SpookyGame.Input;
+using SpookyGame.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -68,7 +69,7 @@ namespace SpookyGame.Player
             // TODO(settings):
             // _mouseSensitivity   = GameSettings.MouseSensitivity;
             // _gamepadSensitivity = GameSettings.GamepadSensitivity;
-            // _invertY            = GameSettings.InvertY;   // if/when exposed
+            _invertY            = GameSettings.InvertY;   // if/when exposed
         }
  
         /// <summary>
@@ -80,47 +81,47 @@ namespace SpookyGame.Player
              if (Cursor.lockState != CursorLockMode.Locked)
                  return;
             
-            // Mouse deltas are per-frame displacements; gamepad sticks are a rate
-            // and must be scaled by dt to stay framerate-independent.
-            float yawDelta, pitchDelta;
-            if (deviceType == ControlDeviceType.Gamepad)
-            {
-                yawDelta   = lookDelta.x * _gamepadSensitivity * dt;
-                pitchDelta = lookDelta.y * _gamepadSensitivity * dt;
-            }
-            else
-            {
-                yawDelta   = lookDelta.x * _mouseSensitivity;
-                pitchDelta = lookDelta.y * _mouseSensitivity;
-            }
+             // Mouse deltas are per-frame displacements; gamepad sticks are a rate
+             // and must be scaled by dt to stay framerate-independent.
+             float yawDelta, pitchDelta;
+             if (deviceType == ControlDeviceType.Gamepad)
+             {
+                 yawDelta   = lookDelta.x * _gamepadSensitivity * dt;
+                 pitchDelta = lookDelta.y * _gamepadSensitivity * dt;
+             }
+             else
+             {
+                 yawDelta   = lookDelta.x * _mouseSensitivity;
+                 pitchDelta = lookDelta.y * _mouseSensitivity;
+             }
  
-            _targetYaw   += yawDelta;
-            _targetPitch += pitchDelta * (_invertY ? 1f : -1f);
-            _targetPitch  = Mathf.Clamp(_targetPitch, _minPitch, _maxPitch);
+             _targetYaw   += yawDelta;
+             _targetPitch += pitchDelta * (_invertY ? 1f : -1f);
+             _targetPitch  = Mathf.Clamp(_targetPitch, _minPitch, _maxPitch);
  
-            // Both angles accumulate continuously, so plain Lerp is correct here:
-            // there is never a +/-180 wrap discontinuity between current and target.
-            float k = 1f - Mathf.Exp(-_lookSharpness * dt);
-            _yaw   = Mathf.Lerp(_yaw, _targetYaw, k);
-            _pitch = Mathf.Lerp(_pitch, _targetPitch, k);
+             // Both angles accumulate continuously, so plain Lerp is correct here:
+             // there is never a +/-180 wrap discontinuity between current and target.
+             float k = 1f - Mathf.Exp(-_lookSharpness * dt);
+             _yaw   = Mathf.Lerp(_yaw, _targetYaw, k);
+             _pitch = Mathf.Lerp(_pitch, _targetPitch, k);
  
-            // Periodically rebase yaw to protect float precision during long sessions.
-            // Both values shift together, so nothing observable changes.
-            if (Mathf.Abs(_targetYaw) > 720f)
-            {
-                float rebase = Mathf.Round(_targetYaw / 360f) * 360f;
-                _targetYaw -= rebase;
-                _yaw       -= rebase;
-            }
+             // Periodically rebase yaw to protect float precision during long sessions.
+             // Both values shift together, so nothing observable changes.
+             if (Mathf.Abs(_targetYaw) > 720f)
+             {
+                 float rebase = Mathf.Round(_targetYaw / 360f) * 360f;
+                 _targetYaw -= rebase;
+                 _yaw       -= rebase;
+             }
  
-            transform.localRotation = Quaternion.Euler(0f, _yaw, 0f);
-            if (_cameraPivot != null)
-                _cameraPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
+             transform.localRotation = Quaternion.Euler(0f, _yaw, 0f);
+             if (_cameraPivot != null)
+                 _cameraPivot.localRotation = Quaternion.Euler(_pitch, 0f, 0f);
  
-            // AimTarget is a child of the body (already rotated by _yaw), so its
-            // local yaw is the remaining lag; pitch is applied directly.
-            if (_aimTarget != null)
-                _aimTarget.localRotation = Quaternion.Euler(_targetPitch, _targetYaw - _yaw, 0f);
+             // AimTarget is a child of the body (already rotated by _yaw), so its
+             // local yaw is the remaining lag; pitch is applied directly.
+             if (_aimTarget != null)
+                 _aimTarget.localRotation = Quaternion.Euler(_targetPitch, _targetYaw - _yaw, 0f);
         }
 
         private static void LockCursor(bool locked)

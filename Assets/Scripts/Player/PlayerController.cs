@@ -77,10 +77,7 @@ namespace SpookyGame.Player
             if (GameManager.Instance.IsPaused)
                 return;
 
-            float dt = Time.deltaTime;
 
-            // First, update our movement and camera.
-            UpdateLocomotion(dt); 
         }
         
         // 2nd
@@ -97,7 +94,10 @@ namespace SpookyGame.Player
                 if (_cameraRig)
                     _cameraRig.SetLookLag(_look.LookLag.x);
             }
-            
+            float dt = Time.deltaTime;
+
+            // First, update our movement and camera.
+            UpdateLocomotion(dt); 
             // Check for non-locomotion inputs.
             HandleInteractInput();
             HandleItemInput();
