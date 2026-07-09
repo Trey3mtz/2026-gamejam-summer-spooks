@@ -18,8 +18,8 @@ namespace SpookyGame.Player
         [SerializeField] private Transform _aimTarget;
  
         [Header("Smoothing")]
-        [Tooltip("How quickly the head catches up to the look target (~1/seconds). Higher = snappier. 30+ is effectively instant.")]
-        [SerializeField] private float _lookSharpness = 16f;
+        [Tooltip("How quickly the head catches up to the look target (16 == ~1/seconds). Higher = snappier. 30+ is effectively instant.")]
+        [SerializeField] private float _lookSharpness = 12f;
         [SerializeField] private bool _invertY = false;
  
         [Header("Sensitivity (fallbacks until GameSettings is wired)")]
