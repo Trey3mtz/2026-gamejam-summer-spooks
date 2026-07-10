@@ -30,6 +30,7 @@ namespace SpookyGame.Player
         private PlayerInputInterpreter _input;
         private CapsuleCollider _capsule;
         private CharacterStatePayload _state;
+        private CameraMotionData _camMotionData;
         private int _tick;
 
         // ================================================================
@@ -79,18 +80,16 @@ namespace SpookyGame.Player
             if (GameManager.Instance.IsPaused)
                 return;
             
-            // Look runs at render rate so smoothing stays fluid and per-frame
-            // mouse deltas are consumed exactly once per frame.
+            // Look runs at render rate so smoothing stays fluid and per-frame mouse deltas are consumed exactly once per frame.
             if (_look)
             {
                 _look.Tick(_input.LookInput, _input.CurrentDevice, Time.deltaTime);
                 if (_cameraRig)
                     _cameraRig.SetLookLag(_look.LookLag.x);
             }
-            float dt = Time.deltaTime;
-
-            // First, update our movement and camera.
-            UpdateLocomotion(dt); 
+            
+            UpdateLocomotion(Time.deltaTime); 
+            
             // Check for non-locomotion inputs.
             HandleInteractInput();
             HandleItemInput();
@@ -99,7 +98,9 @@ namespace SpookyGame.Player
         // 3rd
         private void LateUpdate()
         {            
-            // Lastly, Consume single-frame input edges.
+            HandleCameraRig();
+            
+            // Consume single-frame input edges.
             _input.EndFrame();
         }
 
@@ -130,7 +131,6 @@ namespace SpookyGame.Player
             };
 
             // Simulate the next state, then commit the predicted position.
-            _state.Position = transform.position; // resync in case something else moved us
             _state = PlayerPhysics3D.Simulate(_state, cmd, _movementProfile, _capsule, _groundMask);
             transform.position = _state.Position;
 
@@ -138,7 +138,7 @@ namespace SpookyGame.Player
             if (_cameraRig)
             {
                 Vector3 v = _state.Velocity;
-                _cameraRig.SetMotionData(new CameraMotionData
+                _camMotionData = new CameraMotionData
                 {
                     PlanarSpeed = new Vector2(v.x, v.z).magnitude,
                     LateralSpeed = Vector3.Dot(v, transform.right),   // signed, local X
@@ -165,5 +165,7 @@ namespace SpookyGame.Player
             if (_input.PreviousPressed) inv.SelectPreviousItem();
             if (_input.ItemPressed)     inv.TryUseItem(gameObject);
         }
+
+        private void HandleCameraRig() { _cameraRig.SetMotionData(_camMotionData); }
     }
 }
