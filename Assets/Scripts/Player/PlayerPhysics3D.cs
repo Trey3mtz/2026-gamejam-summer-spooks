@@ -34,8 +34,9 @@ namespace SpookyGame.Player
             LayerMask groundMask,
             ExternalImpulse? impulse = null)
         {
-            float dt = cmd.DeltaTime > 0f ? cmd.DeltaTime : Time.deltaTime;
-
+            float dt = cmd.DeltaTime;
+            state.JustJumped = false;
+            
             // --- Intent & timers ---
             state.JumpBufferTimer = cmd.JumpPressed ? JumpBufferTime : state.JumpBufferTimer - dt;
 
@@ -108,7 +109,6 @@ namespace SpookyGame.Player
             Vector3 predicted = CollideAndSlide(state.Position, displacement, capsule, groundMask);
             predicted = Depenetrate(predicted, capsule, groundMask);
 
-            state.JustJumped = false;
             state.Position = predicted;
             state.Tick = cmd.Tick;
             return state;
