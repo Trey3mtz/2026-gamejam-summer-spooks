@@ -112,7 +112,7 @@ namespace SpookyGame.Player
             _pendJumpReleased |= _input.JumpReleased;
             _pendMoveCanceled |= _input.MoveCanceled;
 
-            _accumulator = Mathf.Min(_accumulator + frameDt, _fixedDt * _maxStepsPerFrame);
+            _accumulator = Mathf.Min(_accumulator + Time.deltaTime, _fixedDt * _maxStepsPerFrame);
         
             while (_accumulator >= _fixedDt)
             {
@@ -187,7 +187,7 @@ namespace SpookyGame.Player
                     Grounded = _state.Grounded,
                     Sprinting = _input.SprintHeld,
                     Crouching = _input.CrouchHeld
-                });
+                };
             }
         }
 
