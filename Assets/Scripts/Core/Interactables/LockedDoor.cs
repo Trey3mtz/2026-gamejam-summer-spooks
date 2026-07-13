@@ -30,12 +30,13 @@ namespace SpookyGame.Core.Interactables
           else
           {
               // rattle sound / "It's locked" prompt — leaving CanInteract true enables this feedback
+              FMODUnity.RuntimeManager.PlayOneShot(_rattleSound, gameObject.transform.Position);
           }
       }
 
       private void Open()
       {
-      
+          FMODUnity.RuntimeManager.PlayOneShot(_openSound, gameObject.transform.Position);
       }
   }
 }
