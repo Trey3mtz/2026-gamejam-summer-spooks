@@ -1,8 +1,8 @@
 using UnityEngine;
-using SummerSpooks.Player.Data;
-using SummerSpooks.Player.Configuration;
+using SpookyGame.Player.Data;
+using SpookyGame.Player.Configuration;
 
-namespace SummerSpooks.Player
+namespace SpookyGame.Player
 {
     /// <summary>
     /// The single, shared 3D movement motor. Pure-ish, kinematic capsule simulation:
@@ -34,8 +34,9 @@ namespace SummerSpooks.Player
             LayerMask groundMask,
             ExternalImpulse? impulse = null)
         {
-            float dt = cmd.DeltaTime > 0f ? cmd.DeltaTime : Time.deltaTime;
-
+            float dt = cmd.DeltaTime;
+            state.JustJumped = false;
+            
             // --- Intent & timers ---
             state.JumpBufferTimer = cmd.JumpPressed ? JumpBufferTime : state.JumpBufferTimer - dt;
 
@@ -108,7 +109,6 @@ namespace SummerSpooks.Player
             Vector3 predicted = CollideAndSlide(state.Position, displacement, capsule, groundMask);
             predicted = Depenetrate(predicted, capsule, groundMask);
 
-            state.JustJumped = false;
             state.Position = predicted;
             state.Tick = cmd.Tick;
             return state;

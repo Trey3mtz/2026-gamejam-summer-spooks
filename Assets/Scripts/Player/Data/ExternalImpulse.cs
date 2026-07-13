@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SummerSpooks.Player.Data
+namespace SpookyGame.Player.Data
 {
     /// <summary>
     /// A one-shot velocity change applied on top of the player's own motion

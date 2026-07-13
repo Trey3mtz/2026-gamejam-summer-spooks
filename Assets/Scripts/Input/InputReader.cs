@@ -1,10 +1,9 @@
-using System;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.InputSystem;
 using static InputSystem_Actions;
 
-namespace SummerSpooks.Input
+namespace SpookyGame.Input
 {
     /// <summary>
     /// Single source of truth for raw player input. Wraps the generated Input Actions
@@ -13,12 +12,12 @@ namespace SummerSpooks.Input
     ///
     /// Lives as a ScriptableObject so it can be shared as one input "channel" across systems.
     /// </summary>
-    [CreateAssetMenu(menuName = "SummerSpooks/Input Reader", fileName = "InputReader")]
+    [CreateAssetMenu(menuName = "SpookyGame/Systems/Input Reader", fileName = "InputReader")]
     public class InputReader : ScriptableObject, IPlayerActions, IInputReader
     {
         [Tooltip("The Input Actions asset to drive. Assign InputSystem_Actions. " +
                  "If left empty, the project-wide actions are used.")]
-        public InputSystem_Actions Actions;
+        private InputSystem_Actions Actions;
 
 
         // --- Public event channel: subscribe to these from anywhere ---
@@ -32,10 +31,9 @@ namespace SummerSpooks.Input
         public event UnityAction<bool> Item = delegate { };
         public event UnityAction<bool> Next = delegate { };
         public event UnityAction<bool> Previous = delegate { };
+        public event UnityAction<bool> Pause = delegate { };
   
         // Input Properties
-        public Vector2 Direction => Actions.Player.Move.ReadValue<Vector2>();
-        
         public event UnityAction<ControlDeviceType> OnDeviceChanged = delegate { };
         public ControlDeviceType CurrentDevice { get; private set; }
         
@@ -179,6 +177,12 @@ namespace SummerSpooks.Input
         {
             if (context.started) Sprint.Invoke(true);
             else if (context.canceled) Sprint.Invoke(false);
+        }
+
+        public void OnPause(InputAction.CallbackContext context)
+        {
+            if(context.started)
+                Pause.Invoke(true);
         }
 
         public void OnCrouch(InputAction.CallbackContext context)

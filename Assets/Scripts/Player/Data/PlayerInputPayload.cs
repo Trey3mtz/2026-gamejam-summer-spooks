@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SummerSpooks.Player.Data
+namespace SpookyGame.Player.Data
 {
     /// <summary>
     /// A snapshot of the player's intent for a single simulation tick.
