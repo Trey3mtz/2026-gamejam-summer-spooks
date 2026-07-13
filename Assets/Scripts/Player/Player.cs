@@ -64,6 +64,7 @@ namespace SpookyGame.Player
 
         private void Update()
         {
+            EvaluateHeldLight();
             _flashlight.Tick(Time.deltaTime);
             _blacklight.Tick(Time.deltaTime);
         }
