@@ -30,10 +30,103 @@ namespace SpookyGame.Player
         //  Item States
         // ================================================================
 
-        // out of 100. 0 means no battery.
+        // Out of 100. 0 means no battery.
         private int _flashlightBatteryLife;
         private int _blacklightBatteryLife;
 
+        // How long its been on.
+        private float _flashlightOnDuration = 0f;
+        private float _blacklightOnDuration = 0f;
+
+        // The toggle state
+        private bool _flashlightOn = false;
+        private bool _blacklightOn = false;
+
+
+        // ================================================================
+        //  Item API & helper methods
+        // ================================================================
+
+        public bool ToogleFlashlight()
+        {
+            if(_flashlightOn)
+                _flashlightOn = false;
+            else if(_flashlightBatteryLife > 0)
+                _flashlightOn = true;
+
+            return _flashlightOn;
+        }
+
+        public bool ToogleBlacklight()
+        {
+            if(_blacklightOn)
+                _blacklightOn = false;
+            else if(_blacklightBatteryLife > 0)
+                _blacklightOn = true;
+
+            return _blacklightOn;
+        }
+
+        
+
+        private void HandleFlashlightUpdate()
+        {
+            // If its off, return
+            if(!_flashlightOn)
+                return;
+
+            // If its on, but out of battery, force off
+            if(_flashlightBatteryLife <= 0)
+            {
+                ToogleFlashlight();
+                _flashlightBatteryLife = 0;
+                _flashlightOnDuration = 0f;
+                return;
+            }
+                
+            // If its on and has battery life
+            _flashlightOnDuration += Time.deltaTime;
+            if(_flashlightOnDuration >= 2)
+            {
+                _flashlightBatteryLife -= 1;
+                _flashlightOnDuration = 0f;
+            }
+        }
+
+        private void HandleBlacklightUpdate()
+        {
+            // If its off, return
+            if(!_blacklightOn)
+                return;
+
+            // If its on, but out of battery, force off
+            if(_blacklightBatteryLife <= 0)
+            {
+                ToogleFlashlight();
+                _blacklightBatteryLife = 0;
+                _blacklightOnDuration = 0f;
+                return;
+            }
+                
+            // If its on and has battery life
+            _blacklightOnDuration += Time.deltaTime;
+            if(_blacklightOnDuration >= 2)
+            {
+                _blacklightBatteryLife -= 1;
+                _blacklightOnDuration = 0f;
+            }
+        }
+
+
+        // ================================================================
+        //  State Updates
+        // ================================================================
+
+        private void Update()
+        {
+            HandleFlashlightUpdate();
+            HandleBlacklightUpdate();
+        }
         
         // ================================================================
         //  Saving & Loading
