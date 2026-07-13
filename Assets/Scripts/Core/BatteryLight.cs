@@ -39,5 +39,7 @@ namespace SpookyGame.Core
             _onDuration = 0f;
             Toggled(on);
         }
+
+        public void TurnOff() => SetOn(false);
     }
 }
