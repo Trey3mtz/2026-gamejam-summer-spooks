@@ -44,6 +44,19 @@ namespace SpookyGame.Player
         public bool ToggleFlashlight() => _flashlight.Toggle();
         public bool ToggleBlacklight() => _blacklight.Toggle();
 
+        private void EvaluateHeldLight()
+        {
+            var selected = Inventory.SelectedItem;
+        
+            if (_flashlight.IsOn && !IsSameItem(selected, _flashlightItem))
+                _flashlight.TurnOff();
+        
+            if (_blacklight.IsOn && !IsSameItem(selected, _blacklightItem))
+                _blacklight.TurnOff();
+        }
+   
+        private static bool IsSameItem(ItemDefinition a, ItemDefinition b)
+            => a != null && b != null && a.ItemID == b.ItemID;
 
         // ================================================================
         //  State Updates
