@@ -26,6 +26,14 @@ namespace SpookyGame.Player
             _lastRespawnPosition = transform.position;
         }
 
+        // ================================================================
+        //  Item States
+        // ================================================================
+
+        // out of 100. 0 means no battery.
+        private int _flashlightBatteryLife;
+        private int _blacklightBatteryLife;
+
         
         // ================================================================
         //  Saving & Loading
@@ -39,6 +47,9 @@ namespace SpookyGame.Player
             data.Position = _lastRespawnPosition;
             data.MaxHealth = _health.MaxHp;
             data.CurrentHealth = _health.CurrentHp;
+
+            data.FlashlightBatteryLife = _flashlightBatteryLife;
+            data.BlacklightBatteryLife = _blacklightBatteryLife;
         }
 
         public void Load(PlayerSaveData data)
@@ -48,6 +59,9 @@ namespace SpookyGame.Player
             _lastRespawnPosition = data.Position;
             _health.InitHealthBar(data.MaxHealth);
             _health.SetCurrentHealth(data.CurrentHealth);
+
+            _flashlightBatteryLife = data.FlashlightBatteryLife;
+            _blacklightBatteryLife = data.BlacklightBatteryLife;
         }
     }
 }
