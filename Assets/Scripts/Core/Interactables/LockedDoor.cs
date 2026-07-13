@@ -6,7 +6,8 @@ namespace SpookyGame.Core.Interactables
 {
   public class LockedDoor : Interactable
   {
-      [SerializeField] private 
+      [SerializeField] private FMODUnity.EventReference _openSound;
+      [SerializeField] private FMODUnity.EventReference _rattleSound;
       [SerializeField] private ItemDefinition _requiredKey;
       [SerializeField] private bool _consumeKeyOnUse = false;
       private bool _unlocked;
