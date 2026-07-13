@@ -31,8 +31,8 @@ namespace SpookyGame.Player
         // ================================================================
 
         // Out of 100. 0 means no battery.
-        private int _flashlightBatteryLife;
-        private int _blacklightBatteryLife;
+        private int _flashlightBatteryLife = 100;
+        private int _blacklightBatteryLife = 100;
 
         // How long its been on.
         private float _flashlightOnDuration = 0f;
