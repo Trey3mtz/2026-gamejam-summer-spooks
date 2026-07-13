@@ -17,7 +17,7 @@ MonoBehaviour:
   _crouchSpeed: 1.8
   _moveSmoothTime: 0.1
   _airControl: 0.5
-  _jumpHeight: 1.5
+  _jumpHeight: 1.2
   _gravity: 25
   _groundStickSpeed: 2
   _maxFallSpeed: 45

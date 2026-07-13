@@ -354,7 +354,7 @@ MonoBehaviour:
   _worldCamera: {fileID: 1941354572}
   _output: {fileID: 1825774989}
   _aspectFitter: {fileID: 1825774986}
-  _compositeMaterial: {fileID: 0}
+  _compositeMaterial: {fileID: 2100000, guid: 90d73db86f2e1fb4bb48116ef1179aed, type: 2}
 --- !u!114 &69575065
 MonoBehaviour:
   m_ObjectHideFlags: 0
