@@ -102,7 +102,7 @@ namespace SpookyGame.Player
             // If its on, but out of battery, force off
             if(_blacklightBatteryLife <= 0)
             {
-                ToogleFlashlight();
+                ToggleBlacklight();
                 _blacklightBatteryLife = 0;
                 _blacklightOnDuration = 0f;
                 return;
