@@ -8,7 +8,7 @@ namespace SpookyGame.Core
         
         [Header("Sensor Settings")]
         [SerializeField] private float interactDistance = 1.5f;
-        [SerializeField] private float castRadius = 0.2f; // Controls the "thickness" of the ray
+        [SerializeField] private float castRadius = 0.3f; // Controls the "thickness" of the ray
         [SerializeField] private LayerMask interactableLayer;
         
         // Tracks the current state of what the player is looking at
@@ -68,7 +68,7 @@ namespace SpookyGame.Core
             // If we currently have a validated target in our data state, execute it
             if (_currentInteractable && _currentInteractable.CanInteract(gameObject.transform.root.gameObject))
             {
-                _currentInteractable.Interact(gameObject);
+                _currentInteractable.Interact(gameObject.transform.root.gameObject);
                 
                 // Re-evaluate immediately after interacting. 
                 PerformSensorCheck();

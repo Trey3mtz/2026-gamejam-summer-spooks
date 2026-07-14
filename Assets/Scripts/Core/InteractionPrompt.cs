@@ -20,7 +20,7 @@ namespace SpookyGame.Core
         
         [Header("Distance Scaling")]
         [Tooltip("X-axis: Distance to camera. Y-axis: Resulting local scale multiplier.")]
-        [SerializeField] private AnimationCurve scaleDistanceCurve = AnimationCurve.Linear(0f, 0.35f, 2f, 2f); // (lowest distance, smallest textsize, longest distance, largest textsize)
+        [SerializeField] private AnimationCurve scaleDistanceCurve = AnimationCurve.Linear(0.5f, 0.35f, 2f, 2f); // (lowest distance, smallest textsize, longest distance, largest textsize)
        
         private Transform _cameraTransform;
         private Transform _followTarget;
@@ -99,7 +99,7 @@ namespace SpookyGame.Core
         
         private void UpdateScale()
         {
-            if (_cameraTransform == null ||  text.enabled == false) return;
+            if (!_cameraTransform) return;
 
             // Measure straight-line distance from the prompt to the camera
             float distance = Vector3.Distance(transform.position, _cameraTransform.position);

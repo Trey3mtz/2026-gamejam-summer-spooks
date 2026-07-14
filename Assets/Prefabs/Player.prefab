@@ -263,6 +263,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 937cb4ecfcfe40248a42cdc2c1e91d1f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.Player
+  _flashlight:
+    _secondsPerPoint: 2
+    BatteryLife: 100
+  _blacklight:
+    _secondsPerPoint: 2
+    BatteryLife: 100
 --- !u!114 &1541528555901294701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -383,7 +389,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.InteractableSensor
   cameraTransform: {fileID: 8313305086576622973}
-  interactDistance: 3
+  interactDistance: 1.5
+  castRadius: 0.3
   interactableLayer:
     serializedVersion: 2
     m_Bits: 2048

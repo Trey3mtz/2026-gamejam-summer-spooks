@@ -108,7 +108,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 
+  m_text: asdfasdfasdf
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -142,8 +142,8 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
-  m_VerticalAlignment: 256
+  m_HorizontalAlignment: 2
+  m_VerticalAlignment: 512
   m_textAlignment: 65535
   m_characterSpacing: 0
   m_characterHorizontalScale: 1
@@ -205,23 +205,23 @@ MonoBehaviour:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
-      time: 0.010238647
-      value: 0.5062256
-      inSlope: 85.92481
-      outSlope: 85.92481
-      tangentMode: 0
-      weightedMode: 2
-      inWeight: 0.33333334
-      outWeight: 0.01421391
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 0.0032162326
-      outSlope: 0.0032162326
-      tangentMode: 0
-      weightedMode: 1
-      inWeight: 1
+      time: 0.4993265
+      value: 0.0000010419171
+      inSlope: 0.6655599
+      outSlope: 0.6655599
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
       outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 2.0077515
+      value: 1.0039482
+      inSlope: 0.6655599
+      outSlope: 0.6655599
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
