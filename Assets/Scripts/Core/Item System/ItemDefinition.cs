@@ -63,5 +63,5 @@ namespace SpookyGame.Core.Item_System
         }
     }
 
-    public enum ItemType { Consumable, Weapon, Material, Key }
+    public enum ItemType { Consumable, Tool, Weapon, Material, Key } // Key and Material cannot be held in hand
 }
