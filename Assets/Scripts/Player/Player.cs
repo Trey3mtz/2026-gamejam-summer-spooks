@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using SpookyGame.Core;
+using SpookyGame.Core.Item_Effects;
 using SpookyGame.Core.Item_System;
 using SpookyGame.Player.Data;
 using UnityEngine;
@@ -41,23 +42,26 @@ namespace SpookyGame.Player
         public BatteryLight Flashlight => _flashlight;
         public BatteryLight Blacklight => _blacklight;
         
-        public bool ToggleFlashlight() => _flashlight.Toggle();
-        public bool ToggleBlacklight() => _blacklight.Toggle();
+        public bool ToggleLight(LightKind kind) => GetLight(kind).Toggle();
 
         private void EvaluateHeldLight()
         {
-            var selected = Inventory.SelectedItem;
-        
-            if (_flashlight.IsOn && !IsSameItem(selected, _flashlightItem))
-                _flashlight.TurnOff();
-        
-            if (_blacklight.IsOn && !IsSameItem(selected, _blacklightItem))
-                _blacklight.TurnOff();
+            LightKind? held = GetLightKind(Inventory.SelectedItem);
+
+            if (_flashlight.IsOn && held != LightKind.Flashlight) _flashlight.TurnOff();
+            if (_blacklight.IsOn && held != LightKind.Blacklight) _blacklight.TurnOff();
         }
    
-        private static bool IsSameItem(ItemDefinition a, ItemDefinition b)
-            => a != null && b != null && a.ItemID == b.ItemID;
-
+        private static LightKind? GetLightKind(ItemDefinition item)
+        {
+            if (!item) return null;
+            foreach (var effect in item.Effects)
+                if (effect is ToggleLightEffect toggle)
+                    return toggle.Kind;
+            return null;
+        }
+        private BatteryLight GetLight(LightKind kind)
+            => kind == LightKind.Flashlight ? _flashlight : _blacklight;
         // ================================================================
         //  State Updates
         // ================================================================
@@ -82,8 +86,8 @@ namespace SpookyGame.Player
             data.MaxHealth = _health.MaxHp;
             data.CurrentHealth = _health.CurrentHp;
 
-            data.FlashlightBatteryLife = _flashlightBatteryLife;
-            data.BlacklightBatteryLife = _blacklightBatteryLife;
+            data.FlashlightBatteryLife = _flashlight.BatteryLife;
+            data.BlacklightBatteryLife = _blacklight.BatteryLife;
         }
 
         public void Load(PlayerSaveData data)
@@ -94,8 +98,8 @@ namespace SpookyGame.Player
             _health.InitHealthBar(data.MaxHealth);
             _health.SetCurrentHealth(data.CurrentHealth);
 
-            _flashlightBatteryLife = data.FlashlightBatteryLife;
-            _blacklightBatteryLife = data.BlacklightBatteryLife;
+            _flashlight.BatteryLife = data.FlashlightBatteryLife;
+            _blacklight.BatteryLife = data.BlacklightBatteryLife;
         }
     }
 }

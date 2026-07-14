@@ -8,6 +8,7 @@ namespace SpookyGame.Core.Interactables
     public class WorldItem : Interactable
     {
         [SerializeField] private ItemDefinition _itemDef;
+
         // NOTE: Look at Interactable.cs for the rest of the members
 
         private void Awake()
@@ -50,6 +51,7 @@ namespace SpookyGame.Core.Interactables
             if(wasSuccessful)
             {
                 HidePrompt();
+                gameObject.SetActive(false);
             }
         }
     }

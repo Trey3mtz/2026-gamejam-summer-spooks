@@ -14,10 +14,11 @@ namespace SpookyGame.Core.Interactables
     
         public override bool CanInteract(GameObject interactor) => true; // locked doors still respond ("It's locked.")
     
+        // ReSharper disable Unity.PerformanceAnalysis
         public override void Interact(GameObject interactor)
         {
-            var player = interactor.GetComponentInParent<Player>();
-            if (player == null) return;
+            var player = interactor.transform.root.GetComponent<Player.Player>();
+            if (!player) return;
     
             if (_unlocked) { Open(); return; }
     
