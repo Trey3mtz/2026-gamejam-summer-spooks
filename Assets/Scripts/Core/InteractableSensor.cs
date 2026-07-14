@@ -6,10 +6,11 @@ namespace SpookyGame.Core
     {       
         [SerializeField] private Transform cameraTransform;
         
-        [Header("Raycast Settings")]
-        [SerializeField] private float interactDistance = 2f;
+        [Header("Sensor Settings")]
+        [SerializeField] private float interactDistance = 1.5f;
+        [SerializeField] private float castRadius = 0.2f; // Controls the "thickness" of the ray
         [SerializeField] private LayerMask interactableLayer;
-
+        
         // Tracks the current state of what the player is looking at
         private Interactable _currentInteractable;
 
@@ -23,11 +24,11 @@ namespace SpookyGame.Core
             // Defensive check: if no camera is assigned, default to this transform
             Transform originTransform = cameraTransform ? cameraTransform : transform;
             
-            Ray ray = new Ray(originTransform.position, originTransform.forward);
             Interactable hitInteractable = null;
-
-            // Perform the spatial data transform (Raycast)
-            if (Physics.Raycast(ray, out RaycastHit hit, interactDistance, interactableLayer))
+            
+            // Perform the spatial data transform (SphereCast)
+            // Parameters: Origin, Radius, Direction, out HitInfo, Distance, LayerMask
+            if (Physics.SphereCast(originTransform.position, castRadius, originTransform.forward, out RaycastHit hit, interactDistance, interactableLayer))
             {
                 // Grab the interactable component. 
                 if (hit.collider.TryGetComponent(out Interactable interactable))
@@ -82,6 +83,27 @@ namespace SpookyGame.Core
                 _currentInteractable.HidePrompt();
                 _currentInteractable = null;
             }
+        }
+
+
+        private void OnDrawGizmosSelected()
+        {
+            // Draws the spherecast area in the Unity Editor so you can visualize the radius and distance
+            Transform originTransform = cameraTransform ? cameraTransform : transform;
+            
+            Gizmos.color = Color.yellow;
+            
+            // Draw starting sphere
+            Gizmos.DrawWireSphere(originTransform.position, castRadius);
+            // Draw ending sphere at max distance
+            Vector3 endPosition = originTransform.position + (originTransform.forward * interactDistance);
+            Gizmos.DrawWireSphere(endPosition, castRadius);
+            
+            // Draw connecting lines to form the "cylinder" 
+            Gizmos.DrawLine(originTransform.position + originTransform.up * castRadius, endPosition + originTransform.up * castRadius);
+            Gizmos.DrawLine(originTransform.position - originTransform.up * castRadius, endPosition - originTransform.up * castRadius);
+            Gizmos.DrawLine(originTransform.position + originTransform.right * castRadius, endPosition + originTransform.right * castRadius);
+            Gizmos.DrawLine(originTransform.position - originTransform.right * castRadius, endPosition - originTransform.right * castRadius);
         }
     }
 }
