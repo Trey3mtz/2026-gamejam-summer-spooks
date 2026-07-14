@@ -29,6 +29,7 @@ namespace SpookyGame.Input
         public event UnityAction<bool> Crouch = delegate { };
         public event UnityAction<bool> Interact = delegate { };
         public event UnityAction<bool> Item = delegate { };
+        public event UnityAction<bool> Holster = delegate { };
         public event UnityAction<bool> Next = delegate { };
         public event UnityAction<bool> Previous = delegate { };
         public event UnityAction<bool> Pause = delegate { };
@@ -172,7 +173,13 @@ namespace SpookyGame.Input
             if(context.started)
                 Next.Invoke(true);
         }
-
+        
+        public void OnHolster(InputAction.CallbackContext context)
+        {
+            if (context.started)
+                Holster.Invoke(true);
+        }
+        
         public void OnSprint(InputAction.CallbackContext context)
         {
             if (context.started) Sprint.Invoke(true);
