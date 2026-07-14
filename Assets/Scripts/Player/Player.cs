@@ -54,7 +54,7 @@ namespace SpookyGame.Player
 
         private void EvaluateHeldLight()
         {
-            LightKind? held = GetLightKind(Inventory.SelectedItem);
+            LightKind? held = IsHolstered ? null : GetLightKind(Inventory.SelectedItem);
 
             if (_flashlight.IsOn && held != LightKind.Flashlight) _flashlight.TurnOff();
             if (_blacklight.IsOn && held != LightKind.Blacklight) _blacklight.TurnOff();
