@@ -28,16 +28,24 @@ namespace SpookyGame.Player
         }
 
         // ================================================================
-        //  Item States
-        // ================================================================
-
-        [SerializeField] private BatteryLight _flashlight = new BatteryLight();
-        [SerializeField] private BatteryLight _blacklight = new BatteryLight();
-
-
-        // ================================================================
         //  Item API & helper methods
         // ================================================================
+        
+        public bool IsHolstered { get; private set; }
+        public event Action<bool> HolsterChanged = delegate { };
+        
+        public void SetHolstered(bool holstered)
+        {
+            if (IsHolstered == holstered) return;
+            IsHolstered = holstered;
+            HolsterChanged(holstered);
+        }
+        
+        public void ToggleHolster() => SetHolstered(!IsHolstered);
+
+        
+        [SerializeField] private BatteryLight _flashlight = new BatteryLight();
+        [SerializeField] private BatteryLight _blacklight = new BatteryLight();
 
         public BatteryLight Flashlight => _flashlight;
         public BatteryLight Blacklight => _blacklight;
@@ -60,8 +68,10 @@ namespace SpookyGame.Player
                     return toggle.Kind;
             return null;
         }
+        
         private BatteryLight GetLight(LightKind kind)
             => kind == LightKind.Flashlight ? _flashlight : _blacklight;
+            
         // ================================================================
         //  State Updates
         // ================================================================
