@@ -18,6 +18,10 @@ namespace SpookyGame.Player
         private GameObject _currentInstance;
         private ItemDefinition _currentItem;
 
+        private Tween _holsterTween;
+        [SerializeField] private float _holsterDip = 0.35f;      // meters downward
+        [SerializeField] private float _holsterDuration = 0.2f;
+
         // Start, not OnEnable: Player.Awake builds the inventory, and Awake/OnEnable
         // ordering across separate objects isn't guaranteed. Same reasoning as
         // PlayerUI deferring RefreshIcons to Start.
@@ -34,12 +38,14 @@ namespace SpookyGame.Player
         {
             _inventory.OnSelectionChanged += HandleSelectionChanged;
             _inventory.InventoryChanged   += Refresh;
+            _player.HolsterChanged        += HandleHolsterChanged;
         }
 
         private void OnDisable()
         {
             _inventory.OnSelectionChanged -= HandleSelectionChanged;
             _inventory.InventoryChanged   -= Refresh;
+            _player.HolsterChanged        -= HandleHolsterChanged;
         }
 
         private void OnDestroy()
@@ -68,6 +74,32 @@ namespace SpookyGame.Player
             // Identity local transform: the anchor defines the hand pose,
             // the prefab defines its own grip offset internally (see below).
             _currentInstance = Instantiate(item.HeldPrefab, transform, false);
+        }
+
+        private void HandleHolsterChanged(bool _) => ApplyVisibility();
+
+        private void ApplyVisibility()
+        {
+            if (_currentInstance == null) return;
+            _holsterTween?.Kill();
+        
+            if (_player.IsHolstered)
+            {
+                _holsterTween = _currentInstance.transform
+                    .DOLocalMoveY(-_holsterDip, _holsterDuration)
+                    .SetEase(Ease.InQuad)
+                    .OnComplete(() => _currentInstance.SetActive(false))
+                    .SetLink(_currentInstance);
+            }
+            else
+            {
+                _currentInstance.SetActive(true);
+                _currentInstance.transform.localPosition = new Vector3(0f, -_holsterDip, 0f);
+                _holsterTween = _currentInstance.transform
+                    .DOLocalMoveY(0f, _holsterDuration)
+                    .SetEase(Ease.OutQuad)
+                    .SetLink(_currentInstance);
+            }
         }
     }
 }
