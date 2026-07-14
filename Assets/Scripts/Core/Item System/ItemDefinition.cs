@@ -11,7 +11,13 @@ namespace SpookyGame.Core.Item_System
         public string ItemName;
         private uint ID;
         public uint ItemID => ID;
+
         
+        [Header("Data")]
+        public bool IsStackable = true;
+        public int MaxStackSize = 99;
+        public ItemType Category;        
+
         
         [Header("Visuals")]
         public Sprite Icon;
@@ -19,10 +25,10 @@ namespace SpookyGame.Core.Item_System
         public GameObject WorldPrefab; 
         public FMODUnity.EventReference UseSound;
 
-        [Header("Data")]
-        public bool IsStackable = true;
-        public int MaxStackSize = 99;
-        public ItemType Category;
+        [Tooltip("Visual-only prefab shown in the hand while selected. Leave null for items that cannot be held (Keys, Materials).")]
+        public GameObject HeldPrefab;
+
+
         
         // This allows us to embed lightweight C# classes directly into the inspector.
         [Tooltip("Logic pieces that will execute when this item is used.")]
@@ -63,5 +69,5 @@ namespace SpookyGame.Core.Item_System
         }
     }
 
-    public enum ItemType { Consumable, Tool, Weapon, Material, Key } // Key and Material cannot be held in hand
+    public enum ItemType { Consumable, Tool, Weapon, Material, Key } 
 }
