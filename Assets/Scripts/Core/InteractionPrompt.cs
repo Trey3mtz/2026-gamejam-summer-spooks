@@ -15,12 +15,12 @@ namespace SpookyGame.Core
         [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0);
         [SerializeField] private float fadeDuration = 0.4f;
         [SerializeField] private float moveDuration = 0.35f;
-        [SerializeField] private float minTextSize = 0.5f;
+        [SerializeField] private float minTextSize = 0.35f;
         [SerializeField] private float maxTextSize = 2f;
         
         [Header("Distance Scaling")]
         [Tooltip("X-axis: Distance to camera. Y-axis: Resulting local scale multiplier.")]
-        [SerializeField] private AnimationCurve scaleDistanceCurve = AnimationCurve.Linear(0f, 0.5f, 15f, 2f);
+        [SerializeField] private AnimationCurve scaleDistanceCurve = AnimationCurve.Linear(0f, 0.35f, 2f, 2f); // (lowest distance, smallest textsize, longest distance, largest textsize)
        
         private Transform _cameraTransform;
         private Transform _followTarget;
@@ -51,7 +51,7 @@ namespace SpookyGame.Core
             _followTarget = target;
             text.text = message;
             text.alpha = 0f;
-            UpdateScale();
+
             transform.position = target.position; // start at target
             //gameObject.SetActive(true);
             text.enabled = true;
@@ -66,6 +66,8 @@ namespace SpookyGame.Core
 
             _fadeTween = text.DOFade(1f, fadeDuration)
                 .SetEase(Ease.OutCubic);
+
+            UpdateScale();
         }
 
         public void Hide()
@@ -91,11 +93,13 @@ namespace SpookyGame.Core
             {
                 UpdatePosition();
             }
+            
             UpdateScale();
         }
+        
         private void UpdateScale()
         {
-            if (_cameraTransform == null) return;
+            if (_cameraTransform == null ||  text.enabled == false) return;
 
             // Measure straight-line distance from the prompt to the camera
             float distance = Vector3.Distance(transform.position, _cameraTransform.position);
