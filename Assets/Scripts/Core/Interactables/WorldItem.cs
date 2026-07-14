@@ -41,7 +41,7 @@ namespace SpookyGame.Core.Interactables
 
         // ReSharper disable Unity.PerformanceAnalysis
         public override void Interact(GameObject interactor)
-        {Debug.Log("interactor with " + gameObject.name);
+        {
             var player = interactor.GetComponent<Player.Player>();
             if(!player) return;
             
