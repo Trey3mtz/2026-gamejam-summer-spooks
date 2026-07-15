@@ -12,7 +12,7 @@ namespace SpookyGame.Player
     /// </summary>
     public class HeldItemRig : MonoBehaviour
     {
-        [Tooltip("Owning Player. Found in parents if left empty.")]
+        [Tooltip("Owning Player. Must assign in editor.")]
         [SerializeField] private Player _player;
 
         private PlayerInventory _inventory => _player.Inventory;
