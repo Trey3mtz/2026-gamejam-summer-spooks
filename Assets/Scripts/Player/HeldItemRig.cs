@@ -1,3 +1,4 @@
+using DG.Tweening;
 using UnityEngine;
 using SpookyGame.Core.Item_System;
 
@@ -31,14 +32,16 @@ namespace SpookyGame.Player
                 _player = GetComponentInParent<Player>();
 
             _inventory = _player.Inventory;
+            
+            _inventory.OnSelectionChanged += HandleSelectionChanged;
+            _inventory.InventoryChanged   += Refresh;
+            _player.HolsterChanged        += HandleHolsterChanged;            
             Refresh();
         }
 
         private void OnEnable()
         {
-            _inventory.OnSelectionChanged += HandleSelectionChanged;
-            _inventory.InventoryChanged   += Refresh;
-            _player.HolsterChanged        += HandleHolsterChanged;
+
         }
 
         private void OnDisable()
@@ -63,13 +66,13 @@ namespace SpookyGame.Player
             if (item == _currentItem) return;   // InventoryChanged fires often; skip no-ops
             _currentItem = item;
 
-            if (_currentInstance != null)
+            if (_currentInstance)
             {
                 Destroy(_currentInstance);
                 _currentInstance = null;
             }
 
-            if (item == null || item.HeldPrefab == null) return;
+            if (!item || !item.HeldPrefab) return;
 
             // Identity local transform: the anchor defines the hand pose,
             // the prefab defines its own grip offset internally (see below).
@@ -80,7 +83,7 @@ namespace SpookyGame.Player
 
         private void ApplyVisibility()
         {
-            if (_currentInstance == null) return;
+            if (!_currentInstance) return;
             _holsterTween?.Kill();
         
             if (_player.IsHolstered)
