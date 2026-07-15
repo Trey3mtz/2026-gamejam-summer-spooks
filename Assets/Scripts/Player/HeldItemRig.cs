@@ -15,7 +15,7 @@ namespace SpookyGame.Player
         [Tooltip("Owning Player. Found in parents if left empty.")]
         [SerializeField] private Player _player;
 
-        private PlayerInventory _inventory;
+        private PlayerInventory _inventory => _player.Inventory;
         private GameObject _currentInstance;
         private ItemDefinition _currentItem;
 
@@ -23,25 +23,12 @@ namespace SpookyGame.Player
         [SerializeField] private float _holsterDip = 0.35f;      // meters downward
         [SerializeField] private float _holsterDuration = 0.2f;
 
-        // Start, not OnEnable: Player.Awake builds the inventory, and Awake/OnEnable
-        // ordering across separate objects isn't guaranteed. Same reasoning as
-        // PlayerUI deferring RefreshIcons to Start.
-        private void Start()
+        private void OnEnable()
         {
-            if (_player == null)
-                _player = GetComponentInParent<Player>();
-
-            _inventory = _player.Inventory;
-            
             _inventory.OnSelectionChanged += HandleSelectionChanged;
             _inventory.InventoryChanged   += Refresh;
             _player.HolsterChanged        += HandleHolsterChanged;            
             Refresh();
-        }
-
-        private void OnEnable()
-        {
-
         }
 
         private void OnDisable()
@@ -51,12 +38,6 @@ namespace SpookyGame.Player
             _player.HolsterChanged        -= HandleHolsterChanged;
         }
 
-        private void OnDestroy()
-        {
-            if (_inventory == null) return;
-            _inventory.OnSelectionChanged -= HandleSelectionChanged;
-            _inventory.InventoryChanged   -= Refresh;
-        }
 
         private void HandleSelectionChanged(int _) => Refresh();
 
