@@ -23,17 +23,18 @@ namespace SpookyGame.Core.Item_System
         public Sprite Icon;
         [Tooltip("The prefab that will be spawned in the world before the player picks up this item.")]
         public GameObject WorldPrefab; 
-        public FMODUnity.EventReference UseSound;
-
         [Tooltip("Visual-only prefab shown in the hand while selected. Leave null for items that cannot be held (Keys, Materials).")]
         public GameObject HeldPrefab;
 
 
-        
+        [Header("Item Use")]
         // This allows us to embed lightweight C# classes directly into the inspector.
         [Tooltip("Logic pieces that will execute when this item is used.")]
         [SerializeReference, SubclassPicker]
-        public List<IItemEffect> Effects = new List<IItemEffect>();
+        public List<IItemEffect> Effects = new List<IItemEffect>();        
+        public FMODUnity.EventReference UseSound;
+        
+
 
         // This is the call to use the item
         public void Execute(GameObject user, Vector3 targetPosition)
