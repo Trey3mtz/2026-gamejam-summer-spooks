@@ -14,7 +14,9 @@ namespace SpookyGame.Player
         private HealthBar _health;
         public HealthBar Health => _health;
         
-        public PlayerInventory Inventory { get; private set; }
+        private PlayerInventory _inventory = new PlayerInventory();
+        
+        public PlayerInventory Inventory => _inventory;
         
         private Vector3 _lastRespawnPosition;
         
@@ -23,7 +25,7 @@ namespace SpookyGame.Player
             _health = new HealthBar();
             _health.InitHealthBar(10);
             
-            Inventory = new PlayerInventory();
+            _inventory = new PlayerInventory();
             _lastRespawnPosition = transform.position;
         }
 

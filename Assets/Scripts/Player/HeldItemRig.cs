@@ -15,7 +15,7 @@ namespace SpookyGame.Player
         [Tooltip("Owning Player. Must assign in editor.")]
         [SerializeField] private Player _player;
 
-        private PlayerInventory _inventory => _player.Inventory;
+        private PlayerInventory _inventory = new PlayerInventory();
         private GameObject _currentInstance;
         private ItemDefinition _currentItem;
 
@@ -25,6 +25,13 @@ namespace SpookyGame.Player
 
         private void OnEnable()
         {
+            if (_player.Inventory == null)
+            {
+                Debug.LogError("Player.Inventory not assigned!"); 
+                return;
+            }
+            
+            _inventory = _player.Inventory;
             _inventory.OnSelectionChanged += HandleSelectionChanged;
             _inventory.InventoryChanged   += Refresh;
             _player.HolsterChanged        += HandleHolsterChanged;            
