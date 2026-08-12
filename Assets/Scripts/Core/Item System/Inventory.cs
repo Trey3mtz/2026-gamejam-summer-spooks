@@ -31,6 +31,21 @@ namespace SpookyGame.Core.Item_System
             return _Inventory;
         }
 
+        public bool Contains(ItemDefinition item)
+        {
+            return _Inventory.Find(e => e.item == item) != null;
+        }
+        
+        public bool RemoveOne(ItemDefinition item)
+        {
+            InventoryEntry entry = _Inventory.Find(e => e.item == item);
+            if(entry == null) return false;
+            entry.stackSize--;
+            if(entry.stackSize <= 0)
+                _Inventory.Remove(entry);
+            return true;
+        }
+
         // This is for when you automatically suck up items.
         public bool AddItem(ItemDefinition newItem,  int amountAdd)
         {   

@@ -1,0 +1,37 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0725b7a6276693a43b32d9554b6d3dcf, type: 3}
+  m_Name: Flashlight
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.Item_System.ItemDefinition
+  ItemName: Flashlight
+  IsStackable: 0
+  MaxStackSize: 1
+  Category: 1
+  Icon: {fileID: 5089934014483243112, guid: 621beb6a902f3b141984013efc161256, type: 3}
+  WorldPrefab: {fileID: 6402639977425665540, guid: 66646365ede2e134bbe36e8a6ce04ecd, type: 3}
+  UseSound:
+    Guid:
+      Data1: 0
+      Data2: 0
+      Data3: 0
+      Data4: 0
+    Path: 
+  HeldPrefab: {fileID: 6905784067262271382, guid: cefb4dba68c419349b9fc2db894a149c, type: 3}
+  Effects:
+  - rid: 1839836212975894615
+  references:
+    version: 2
+    RefIds:
+    - rid: 1839836212975894615
+      type: {class: ToggleLightEffect, ns: SpookyGame.Core.Item_Effects, asm: Assembly-CSharp}
+      data:
+        Kind: 0

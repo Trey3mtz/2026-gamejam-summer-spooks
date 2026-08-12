@@ -12,5 +12,8 @@ namespace SpookyGame.Player.Data
         public List<InventorySaveData> Inventory;
         public int MaxHealth;
         public int CurrentHealth;
+
+        public int FlashlightBatteryLife;
+        public int BlacklightBatteryLife;
     }  
 }

@@ -52,6 +52,9 @@ namespace SpookyGame.Player
                 return entries[_selectedInventorySlot];
             }
         }
+        
+        public bool Contains(ItemDefinition item)  => _inventory.Contains(item);
+        public bool RemoveOne(ItemDefinition item) => _inventory.RemoveOne(item);
 
         public ItemDefinition ItemInSlot(int slot)
         {

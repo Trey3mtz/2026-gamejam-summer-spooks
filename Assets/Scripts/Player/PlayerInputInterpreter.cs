@@ -34,6 +34,7 @@ namespace SpookyGame.Player
         public bool NextPressed => _inputBuffers.Next;
         public bool PreviousPressed => _inputBuffers.Previous;
         public bool ItemPressed => _inputBuffers.Item;
+        public bool HolsterPressed => _inputBuffers.Holster;
         public bool PausePressed => _inputBuffers.Pause;
         
         // --- Control Scheme ---
@@ -58,6 +59,7 @@ namespace SpookyGame.Player
             _inputReader.Crouch += OnCrouch;
             _inputReader.Interact += OnInteract;
             _inputReader.Item += OnItem;
+            _inputReader.Holster += OnHolster;
             _inputReader.Next += OnNext;
             _inputReader.Previous += OnPrevious;
             _inputReader.Pause += OnPause;
@@ -76,6 +78,7 @@ namespace SpookyGame.Player
             _inputReader.Crouch -= OnCrouch;
             _inputReader.Interact -= OnInteract;
             _inputReader.Item -= OnItem;
+            _inputReader.Holster -= OnHolster;
             _inputReader.Next -= OnNext;
             _inputReader.Previous -= OnPrevious;
             _inputReader.Pause -= OnPause;
@@ -128,6 +131,11 @@ namespace SpookyGame.Player
         private void OnItem(bool pressed)
         {
             if (pressed) _inputBuffers.Item = true;
+        }
+
+        private void OnHolster(bool pressed)
+        {
+            if (pressed) _inputBuffers.Holster = true;
         }
         
         private void OnNext(bool pressed)

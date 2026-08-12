@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: ItemDatabase
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.Item_System.ItemDatabase
   Entries:
-  - {fileID: 11400000, guid: 7cfc4511272eb944e8164c3e964e802a, type: 2}
+  - {fileID: 11400000, guid: e92b417b88e2ce947ab7c4d51f6ba9c5, type: 2}
+  - {fileID: 11400000, guid: 8e4d80fcac19c8549980940e46fa0ad4, type: 2}

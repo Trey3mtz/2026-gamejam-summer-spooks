@@ -8,6 +8,7 @@ namespace SpookyGame.Core.Interactables
     public class WorldItem : Interactable
     {
         [SerializeField] private ItemDefinition _itemDef;
+
         // NOTE: Look at Interactable.cs for the rest of the members
 
         private void Awake()
@@ -44,12 +45,13 @@ namespace SpookyGame.Core.Interactables
             var player = interactor.GetComponent<Player.Player>();
             if(!player) return;
             
-            Debug.Log("Interacting with " + gameObject.name);
+            Debug.Log("success Interacting with " + gameObject.name);
             var wasSuccessful = player.Inventory.TryAddItem(_itemDef);
             
             if(wasSuccessful)
             {
                 HidePrompt();
+                gameObject.SetActive(false);
             }
         }
     }

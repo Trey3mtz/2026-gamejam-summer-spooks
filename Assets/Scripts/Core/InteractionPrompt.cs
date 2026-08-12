@@ -15,9 +15,16 @@ namespace SpookyGame.Core
         [SerializeField] private Vector3 offset = new Vector3(0, 1f, 0);
         [SerializeField] private float fadeDuration = 0.4f;
         [SerializeField] private float moveDuration = 0.35f;
+        [SerializeField] private float minTextSize = 0.35f;
+        [SerializeField] private float maxTextSize = 2f;
         
-        
+        [Header("Distance Scaling")]
+        [Tooltip("X-axis: Distance to camera. Y-axis: Resulting local scale multiplier.")]
+        [SerializeField] private AnimationCurve scaleDistanceCurve = AnimationCurve.Linear(0.5f, 0.35f, 2f, 2f); // (lowest distance, smallest textsize, longest distance, largest textsize)
+       
+        private Transform _cameraTransform;
         private Transform _followTarget;
+        
         private Tween _moveTween;
         private Tween _fadeTween;
         private bool _isArriving;
@@ -26,11 +33,15 @@ namespace SpookyGame.Core
         {
             if (text == null)
                 text = GetComponent<TextMeshPro >();
-            text.fontSize = 3;
+            text.fontSize = 2;
             text.alignment = TextAlignmentOptions.CenterGeoAligned;
             text.alpha = 0;
 
             text.enabled = false;
+            if (Camera.main != null)
+            {
+                _cameraTransform = Camera.main.transform;
+            }
         }
         
         public void Show(string message, Transform target)
@@ -40,7 +51,7 @@ namespace SpookyGame.Core
             _followTarget = target;
             text.text = message;
             text.alpha = 0f;
-            
+
             transform.position = target.position; // start at target
             //gameObject.SetActive(true);
             text.enabled = true;
@@ -55,6 +66,8 @@ namespace SpookyGame.Core
 
             _fadeTween = text.DOFade(1f, fadeDuration)
                 .SetEase(Ease.OutCubic);
+
+            UpdateScale();
         }
 
         public void Hide()
@@ -75,9 +88,28 @@ namespace SpookyGame.Core
             if (!_followTarget || _isArriving)
                 return;
 
-            UpdatePosition();
+            // Only update position if the initial arrival tween is finished
+            if (!_isArriving)
+            {
+                UpdatePosition();
+            }
+            
+            UpdateScale();
         }
         
+        private void UpdateScale()
+        {
+            if (!_cameraTransform) return;
+
+            // Measure straight-line distance from the prompt to the camera
+            float distance = Vector3.Distance(transform.position, _cameraTransform.position);
+            
+            // Map the distance to a scale factor via the serialized curve
+            float scaleValue = scaleDistanceCurve.Evaluate(distance);
+            
+            // Apply uniform scaling
+            text.fontSize = Mathf.Lerp(minTextSize, maxTextSize, scaleValue);
+        }
         
         private Vector3 _velocity;
         private void UpdatePosition()

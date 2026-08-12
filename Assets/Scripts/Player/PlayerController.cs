@@ -201,10 +201,19 @@ namespace SpookyGame.Player
         {
             if (!_player) return;
             var inv = _player.Inventory;
+
+            if (_input.HolsterPressed)
+                _player.ToggleHolster();
         
-            if (_input.NextPressed)     inv.SelectNextItem();
-            if (_input.PreviousPressed) inv.SelectPreviousItem();
-            if (_input.ItemPressed)     inv.TryUseItem(gameObject);
+            // Cycling implies intent to use — switching also draws.
+            if (_input.NextPressed)     { _player.SetHolstered(false); inv.SelectNextItem(); }
+            if (_input.PreviousPressed) { _player.SetHolstered(false); inv.SelectPreviousItem(); }
+
+            if (_input.ItemPressed)
+            {
+                if (_player.IsHolstered) _player.SetHolstered(false); // draw; consume the press
+                else                     inv.TryUseItem(gameObject);
+            }
         }
 
         private void HandleCameraRig() { _cameraRig.SetMotionData(_camMotionData); }
