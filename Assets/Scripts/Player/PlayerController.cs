@@ -222,6 +222,15 @@ namespace SpookyGame.Player
         public void Teleport(Vector3 position)
         {
             _state.Position = position;
+            _state.Velocity = Vector3.zero;
+            _state.HorizontalRef = Vector3.zero;
+            _state.Grounded = false;
+            _state.JustJumped = false;
+            _state.JumpBufferTimer = 0f;
+            _state.CoyoteTimer = 0f;
+            _state.AirJumpsUsed = 0;
+            _accumulator = 0f;
+            _pendJumpPressed = _pendJumpReleased = _pendMoveCanceled = false;
             _prevSimPosition = _currSimPosition = position;
             transform.position = position;
         }

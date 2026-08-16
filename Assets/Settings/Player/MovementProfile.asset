@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 868094f3ba6b4bdf829d6f7111860c24, type: 3}
   m_Name: MovementProfile
   m_EditorClassIdentifier: 
-  _walkSpeed: 4
-  _sprintSpeed: 6.9
+  _walkSpeed: 6
+  _sprintSpeed: 10
   _crouchSpeed: 1.8
   _moveSmoothTime: 0.1
   _airControl: 0.5
@@ -21,4 +21,4 @@ MonoBehaviour:
   _gravity: 25
   _groundStickSpeed: 2
   _maxFallSpeed: 45
-  _maxHorizontalSpeed: 12
+  _maxHorizontalSpeed: 14

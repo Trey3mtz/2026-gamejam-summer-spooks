@@ -25,7 +25,6 @@ namespace SpookyGame.Player
             _health = new HealthBar();
             _health.InitHealthBar(10);
             
-            _inventory = new PlayerInventory();
             _lastRespawnPosition = transform.position;
         }
 
