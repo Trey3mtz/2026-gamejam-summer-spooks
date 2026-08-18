@@ -50,6 +50,10 @@ namespace SpookyGame.Player
         private CameraMotionData _camMotionData;
         private int _tick;
 
+        /// <summary>Latest simulated state, read-only — for feedback systems (footsteps, FX).</summary>
+        public bool Grounded => _state.Grounded;
+        public Vector3 Velocity => _state.Velocity;
+
         // ================================================================
         //  Unity Setup 
         // ================================================================
