@@ -18,6 +18,8 @@ namespace SpookyGame.Input
         [Tooltip("The Input Actions asset to drive. Assign InputSystem_Actions. " +
                  "If left empty, the project-wide actions are used.")]
         private InputSystem_Actions Actions;
+        private InputAction _flashlightToggleAction;
+        private InputAction _reloadAction;
 
 
         // --- Public event channel: subscribe to these from anywhere ---
@@ -29,6 +31,8 @@ namespace SpookyGame.Input
         public event UnityAction<bool> Crouch = delegate { };
         public event UnityAction<bool> Interact = delegate { };
         public event UnityAction<bool> Item = delegate { };
+        public event UnityAction<bool> FlashlightToggle = delegate { };
+        public event UnityAction<bool> Reload = delegate { };
         public event UnityAction<bool> Holster = delegate { };
         public event UnityAction<bool> Next = delegate { };
         public event UnityAction<bool> Previous = delegate { };
@@ -40,6 +44,16 @@ namespace SpookyGame.Input
         
         private void OnEnable()
         {
+            _flashlightToggleAction = new InputAction("FlashlightToggle", InputActionType.Button);
+            _flashlightToggleAction.AddBinding("<Keyboard>/f");
+            _flashlightToggleAction.AddBinding("<Gamepad>/rightShoulder");
+            _flashlightToggleAction.started += OnFlashlightToggleStarted;
+
+            _reloadAction = new InputAction("Reload", InputActionType.Button);
+            _reloadAction.AddBinding("<Keyboard>/r");
+            _reloadAction.AddBinding("<Gamepad>/buttonWest");
+            _reloadAction.started += OnReloadStarted;
+
             // Hook into the Unity 6 Input System global device change callback
             InputSystem.onDeviceChange += HandleDeviceChange;
             // Also listen for button presses to dynamically switch schemes when a user grabs a controller
@@ -48,6 +62,22 @@ namespace SpookyGame.Input
 
         private void OnDisable()
         {
+            if (_flashlightToggleAction != null)
+            {
+                _flashlightToggleAction.started -= OnFlashlightToggleStarted;
+                _flashlightToggleAction.Disable();
+                _flashlightToggleAction.Dispose();
+                _flashlightToggleAction = null;
+            }
+
+            if (_reloadAction != null)
+            {
+                _reloadAction.started -= OnReloadStarted;
+                _reloadAction.Disable();
+                _reloadAction.Dispose();
+                _reloadAction = null;
+            }
+
             InputSystem.onDeviceChange -= HandleDeviceChange;
             InputSystem.onActionChange -= HandleActionChange;
         }
@@ -60,6 +90,8 @@ namespace SpookyGame.Input
                 Actions.Player.SetCallbacks(this);
             } 
             Actions.Enable();
+            _flashlightToggleAction?.Enable();
+            _reloadAction?.Enable();
         }
 
         public void DisablePlayerActions()
@@ -70,6 +102,8 @@ namespace SpookyGame.Input
                 Actions.Player.SetCallbacks(this);
             }
             Actions.Disable();
+            _flashlightToggleAction?.Disable();
+            _reloadAction?.Disable();
         }
 
         private void HandleDeviceChange(InputDevice device, InputDeviceChange change)
@@ -152,6 +186,16 @@ namespace SpookyGame.Input
         {
             if(context.started)
                 Item.Invoke(true);
+        }
+
+        private void OnFlashlightToggleStarted(InputAction.CallbackContext context)
+        {
+            FlashlightToggle.Invoke(true);
+        }
+
+        private void OnReloadStarted(InputAction.CallbackContext context)
+        {
+            Reload.Invoke(true);
         }
 
         public void OnJump(InputAction.CallbackContext context)

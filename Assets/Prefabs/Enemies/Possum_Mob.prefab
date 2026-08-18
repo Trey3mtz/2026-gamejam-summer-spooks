@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 1545233145675180162}
   - component: {fileID: 1402547373614251228}
   - component: {fileID: 6606607511328646536}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Possum_Visual
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -104,7 +104,7 @@ Animator:
   m_GameObject: {fileID: 832258530907014251}
   m_Enabled: 1
   m_Avatar: {fileID: 0}
-  m_Controller: {fileID: 3516361526438981837, guid: a6a9f831b1347504282d7e5cdcca50b5, type: 3}
+  m_Controller: {fileID: 9100000, guid: 50e205ab98b992f49bd4701b1cd98599, type: 2}
   m_CullingMode: 0
   m_UpdateMode: 0
   m_ApplyRootMotion: 0
@@ -144,7 +144,10 @@ GameObject:
   - component: {fileID: 6477478398697795791}
   - component: {fileID: 7207836073455901767}
   - component: {fileID: 2994841376489827883}
-  m_Layer: 3
+  - component: {fileID: 710000000000000001}
+  - component: {fileID: 710000000000000002}
+  - component: {fileID: 710000000000000003}
+  m_Layer: 6
   m_Name: Possum_Mob
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -178,7 +181,7 @@ NavMeshAgent:
   m_AgentTypeID: 0
   m_Radius: 0.28
   m_Speed: 1.15
-  m_Acceleration: 14
+  m_Acceleration: 65
   avoidancePriority: 50
   m_AngularSpeed: 0
   m_StoppingDistance: 0.3
@@ -265,6 +268,65 @@ MonoBehaviour:
   _zigZagInterval: 0.45
   _zigZagWidth: 2
   _zigZagForwardStep: 3.5
-  _aggroSpeed: 15
-  _chaseStoppingDistance: 1.1
+  _aggroSpeed: 18
+  _chaseStoppingDistance: 0.45
   _repathInterval: 0.2
+  _flashlightStunSeconds: 0.5
+--- !u!114 &710000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436369458404510753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a147410c2184f44a8fc777f70dd9023, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.ActorHealth
+  _maximumHp: 75
+  _damageInvulnerabilitySeconds: 0.1
+  _destroyOnDeath: 1
+  _deathDuration: 0.45
+  _deathFlashColor: {r: 0.35, g: 1, b: 0.95, a: 1}
+--- !u!114 &710000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436369458404510753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a8dc972ab8a24c339d8dc7d889b53b65, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.UI.WorldHealthBar
+  _displayName: FERAL POSSUM
+  _height: 1.35
+  _width: 150
+  _alwaysVisible: 0
+  _nearVisibilityDistance: 10
+  _maximumVisibilityDistance: 30
+  _barColor: {r: 0.92, g: 0.12, b: 0.16, a: 1}
+--- !u!114 &710000000000000003
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436369458404510753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7ba77989408b422aa46570055a08fd2c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Enemies.EnemyMeleeAttack
+  _damage: 8
+  _attackMode: 1
+  _attackRange: 0.9
+  _attackCooldown: 1.1
+  _damageWindup: 0.253
+  _attackAnimationTrigger: 
+  _showPossumScratchOnHit: 1
+  _lineOfSightLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295

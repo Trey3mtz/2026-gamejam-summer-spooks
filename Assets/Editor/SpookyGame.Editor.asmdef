@@ -1,3 +1,6 @@
 {
-	"name": "SpookyGame.Editor"
+    "name": "SpookyGame.Editor",
+    "references": [
+        "Unity.InputSystem"
+    ]
 }

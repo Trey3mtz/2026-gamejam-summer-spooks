@@ -1,4 +1,5 @@
 using System.Collections;
+using SpookyGame.Gameplay;
 using UnityEngine;
 
 namespace SpookyGame.Player
@@ -33,18 +34,36 @@ namespace SpookyGame.Player
             _spawnRotation = spawn.rotation;
         }
 
+        private void OnEnable()
+        {
+            if (_player != null)
+                _player.Health.Died += HandlePlayerDeath;
+        }
+
+        private void OnDisable()
+        {
+            if (_player != null)
+                _player.Health.Died -= HandlePlayerDeath;
+        }
+
         private void Update()
         {
             if (!_isRespawning && transform.position.y <= _killHeight)
+                _player.Health.Kill();
+        }
+
+        private void HandlePlayerDeath()
+        {
+            if (GameRunDirector.Instance != null && GameRunDirector.Instance.HandlePlayerDeath())
+                return;
+
+            if (!_isRespawning)
                 StartCoroutine(RespawnRoutine());
         }
 
         private IEnumerator RespawnRoutine()
         {
             _isRespawning = true;
-
-            if (_player != null && !_player.Health.IsDead)
-                _player.Health.ChangeHealth(-_player.Health.CurrentHp);
 
             if (_controller != null)
                 _controller.enabled = false;
@@ -61,7 +80,7 @@ namespace SpookyGame.Player
             }
 
             if (_restoreHealth && _player != null)
-                _player.Health.Reset();
+                _player.Health.ResetHealth();
 
             _isRespawning = false;
         }

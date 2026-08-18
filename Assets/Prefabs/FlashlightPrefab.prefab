@@ -457,6 +457,14 @@ PrefabInstance:
       propertyPath: m_fontSizeBase
       value: 2
       objectReference: {fileID: 0}
+    - target: {fileID: 1935312167990211656, guid: 28d19791d24b209429b3c29928517fa5, type: 3}
+      propertyPath: minTextSize
+      value: 0.55
+      objectReference: {fileID: 0}
+    - target: {fileID: 1935312167990211656, guid: 28d19791d24b209429b3c29928517fa5, type: 3}
+      propertyPath: maxTextSize
+      value: 0.85
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

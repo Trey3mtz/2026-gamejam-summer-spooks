@@ -13,7 +13,7 @@ namespace SpookyGame.Enemies
     public sealed class PossumSpawnManager : MonoBehaviour
     {
         [SerializeField] private GameObject _possumPrefab;
-        [SerializeField, Range(1, 30)] private int _spawnCount = 14;
+        [SerializeField, Range(1, 30)] private int _spawnCount = 28;
         [SerializeField, Min(0f)] private float _minimumPlayerDistance = 60f;
         [SerializeField, Min(0f)] private float _minimumPossumSpacing = 6f;
         [SerializeField, Range(1, 1000)] private int _attemptsPerPossum = 200;
@@ -23,11 +23,13 @@ namespace SpookyGame.Enemies
         private readonly List<int> _triangleStarts = new List<int>();
         private readonly List<float> _cumulativeAreas = new List<float>();
         private readonly List<Vector3> _spawnedPositions = new List<Vector3>();
+        private readonly List<Bounds> _buildingZones = new List<Bounds>();
         private NavMeshTriangulation _triangulation;
         private float _totalArea;
         private Transform _player;
 
         public int RequestedSpawnCount => _spawnCount;
+        public GameObject PossumPrefab => _possumPrefab;
         public int SpawnedCount { get; private set; }
         public bool FinishedSpawning { get; private set; }
 
@@ -62,6 +64,8 @@ namespace SpookyGame.Enemies
 
             var container = new GameObject("Spawned_Possums").transform;
             container.SetParent(transform, false);
+            _buildingZones.Clear();
+            _buildingZones.AddRange(PossumTerritory.FindCampusBuildingZones());
 
             if (!NavMesh.SamplePosition(_player.position, out NavMeshHit playerHit, 3f, NavMesh.AllAreas))
             {
@@ -77,6 +81,10 @@ namespace SpookyGame.Enemies
 
                 GameObject possum = Instantiate(_possumPrefab, spawnPosition, Quaternion.identity, container);
                 possum.name = $"Possum_{SpawnedCount + 1:00}";
+                PossumTerritory territory = possum.GetComponent<PossumTerritory>();
+                if (territory == null)
+                    territory = possum.AddComponent<PossumTerritory>();
+                territory.ConfigureExterior(_buildingZones);
                 _spawnedPositions.Add(spawnPosition);
                 SpawnedCount++;
             }
@@ -127,6 +135,20 @@ namespace SpookyGame.Enemies
             {
                 Vector3 candidate = RandomPointOnGroundNavMesh();
                 if (PlanarDistance(candidate, _player.position) < _minimumPlayerDistance)
+                    continue;
+
+                bool insideBuilding = false;
+                foreach (Bounds zone in _buildingZones)
+                {
+                    Vector3 extents = zone.extents + new Vector3(0.55f, 0f, 0.55f);
+                    if (Mathf.Abs(candidate.x - zone.center.x) <= extents.x &&
+                        Mathf.Abs(candidate.z - zone.center.z) <= extents.z)
+                    {
+                        insideBuilding = true;
+                        break;
+                    }
+                }
+                if (insideBuilding)
                     continue;
 
                 bool tooCloseToAnother = false;

@@ -16,7 +16,7 @@ namespace SpookyGame.Core
         [SerializeField] private float fadeDuration = 0.4f;
         [SerializeField] private float moveDuration = 0.35f;
         [SerializeField] private float minTextSize = 0.35f;
-        [SerializeField] private float maxTextSize = 2f;
+        [SerializeField] private float maxTextSize = 0.22f;
         
         [Header("Distance Scaling")]
         [Tooltip("X-axis: Distance to camera. Y-axis: Resulting local scale multiplier.")]
@@ -33,7 +33,7 @@ namespace SpookyGame.Core
         {
             if (text == null)
                 text = GetComponent<TextMeshPro >();
-            text.fontSize = 2;
+            text.fontSize = maxTextSize;
             text.alignment = TextAlignmentOptions.CenterGeoAligned;
             text.alpha = 0;
 
@@ -105,7 +105,7 @@ namespace SpookyGame.Core
             float distance = Vector3.Distance(transform.position, _cameraTransform.position);
             
             // Map the distance to a scale factor via the serialized curve
-            float scaleValue = scaleDistanceCurve.Evaluate(distance);
+            float scaleValue = Mathf.Clamp01(scaleDistanceCurve.Evaluate(distance));
             
             // Apply uniform scaling
             text.fontSize = Mathf.Lerp(minTextSize, maxTextSize, scaleValue);

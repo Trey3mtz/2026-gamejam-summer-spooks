@@ -15,5 +15,7 @@ namespace SpookyGame.Player.Data
 
         public int FlashlightBatteryLife;
         public int BlacklightBatteryLife;
+        public int FlashlightMagazineAmmo;
+        public int FlashlightReserveAmmo;
     }  
 }

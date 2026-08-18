@@ -1,5 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
+using SpookyGame.Interfaces;
+using SpookyGame.Core;
 
 namespace SpookyGame.Enemies
 {
@@ -11,7 +13,8 @@ namespace SpookyGame.Enemies
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent))]
-    public sealed class VaqueroStalker : MonoBehaviour
+    [RequireComponent(typeof(ActorHealth))]
+    public sealed class VaqueroStalker : MonoBehaviour, IFlashlightReactive
     {
         private static readonly int VUpTrigger = Animator.StringToHash("VUp");
         private static readonly int IsCloseParameter = Animator.StringToHash("IsClose");
@@ -21,8 +24,8 @@ namespace SpookyGame.Enemies
         [SerializeField] private Transform _player;
 
         [Header("Stalking")]
-        [SerializeField, Min(0f)] private float _movementSpeed = 10f;
-        [SerializeField, Min(0f)] private float _stoppingDistance = 5.5f;
+        [SerializeField, Min(0f)] private float _movementSpeed = 16f;
+        [SerializeField, Min(0f)] private float _stoppingDistance = 2f;
         [SerializeField, Min(0.02f)] private float _repathInterval = 0.2f;
 
         [Header("Close Animation")]
@@ -37,6 +40,9 @@ namespace SpookyGame.Enemies
         [SerializeField, Min(0f)] private float _walkStepsPerSecond = 2.5f;
         [SerializeField, Range(0f, 15f)] private float _walkLeanDegrees = 3.5f;
 
+        [Header("Flashlight Response")]
+        [SerializeField, Min(0f)] private float _flashlightStunSeconds = 1f;
+
         private NavMeshAgent _agent;
         private Animator _animator;
         private SpriteRenderer _spriteRenderer;
@@ -50,6 +56,9 @@ namespace SpookyGame.Enemies
         private bool _isCloseAnimationActive;
         private int _closeAnimationPlayCount;
         private float _initialSpawnDistance = float.PositiveInfinity;
+        private float _stunnedUntil;
+        private bool _isFlashlightStunned;
+        private ActorHealth _health;
 
         public bool IsInitialized => _initialized;
         public bool IsWalking => _initialized && !_agent.isStopped && _agent.velocity.sqrMagnitude > 0.01f;
@@ -64,6 +73,7 @@ namespace SpookyGame.Enemies
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
+            _health = GetComponent<ActorHealth>();
             _animator = GetComponentInChildren<Animator>(true);
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
             _visual = _spriteRenderer != null ? _spriteRenderer.transform : transform;
@@ -100,6 +110,27 @@ namespace SpookyGame.Enemies
             if (!_initialized || _player == null || !_agent.isOnNavMesh)
                 return;
 
+            if (_health.IsDead)
+            {
+                _agent.isStopped = true;
+                ResetWalkVisual();
+                return;
+            }
+
+            if (_isFlashlightStunned)
+            {
+                if (Time.time < _stunnedUntil)
+                {
+                    _agent.isStopped = true;
+                    UpdateWalkMotion(true);
+                    return;
+                }
+
+                _isFlashlightStunned = false;
+                _agent.isStopped = false;
+                _nextRepathTime = 0f;
+            }
+
             float distance = DistanceToPlayer;
             bool shouldAnimateClose = _isCloseAnimationActive
                 ? distance <= Mathf.Max(_closeAnimationDistance, _closeAnimationExitDistance)
@@ -114,7 +145,7 @@ namespace SpookyGame.Enemies
             }
 
             bool closeAnimationLocked = _isCloseAnimationActive;
-            if (closeAnimationLocked || distance <= _stoppingDistance)
+            if (distance <= _stoppingDistance)
             {
                 _agent.isStopped = true;
             }
@@ -147,10 +178,10 @@ namespace SpookyGame.Enemies
         private void ConfigureAgent()
         {
             _agent.speed = _movementSpeed;
-            _agent.acceleration = 10f;
+            _agent.acceleration = 55f;
             _agent.angularSpeed = 0f;
             _agent.stoppingDistance = _stoppingDistance;
-            _agent.autoBraking = true;
+            _agent.autoBraking = false;
             _agent.autoRepath = true;
             _agent.updateRotation = false;
         }
@@ -250,6 +281,17 @@ namespace SpookyGame.Enemies
                 12f * Time.deltaTime);
             _visual.localRotation = Quaternion.Slerp(_visual.localRotation, _visualRestRotation,
                 12f * Time.deltaTime);
+        }
+
+        public void OnFlashlightHit(Vector3 hitPoint, Vector3 shotDirection)
+        {
+            if (!_initialized || !_agent.isOnNavMesh || _health.IsDead)
+                return;
+
+            _stunnedUntil = Mathf.Max(_stunnedUntil, Time.time + _flashlightStunSeconds);
+            _isFlashlightStunned = true;
+            _agent.isStopped = true;
+            ResetWalkVisual();
         }
 
         private static float PlanarDistance(Vector3 a, Vector3 b)

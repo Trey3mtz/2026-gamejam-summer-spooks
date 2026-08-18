@@ -14,6 +14,8 @@ namespace SpookyGame.Player.Data
         public bool Crouch;
         public bool Interact;
         public bool Item;
+		public bool FlashlightToggle;
+		public bool Reload;
 		public bool Holster;
         public bool Next;
         public bool Previous;
@@ -27,6 +29,8 @@ namespace SpookyGame.Player.Data
             JumpReleased = false;
             Interact = false;
             Item = false;
+			FlashlightToggle = false;
+			Reload = false;
 			Holster = false;
             Next = false;
             Previous = false;
@@ -42,6 +46,8 @@ namespace SpookyGame.Player.Data
             Crouch = false;
             Interact = false;
             Item = false;
+			FlashlightToggle = false;
+			Reload = false;
 			Holster = false;
             Next = false;
             Previous = false;

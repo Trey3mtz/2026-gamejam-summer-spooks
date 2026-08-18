@@ -107,7 +107,6 @@ namespace SpookyGame.EditorTools
         private static Material _roofMaterial;
         private static Material _metalMaterial;
         private static Material _orangeMaterial;
-        private static Material _lightFixtureMaterial;
         private static GameObject _singleDoorPrefab;
         private static GameObject _doubleDoorPrefab;
 
@@ -156,7 +155,6 @@ namespace SpookyGame.EditorTools
             _roofMaterial = LoadMaterial("Assets/Materials/Campus/M_Campus_Roof.mat");
             _metalMaterial = LoadMaterial("Assets/Materials/Campus/M_Campus_Metal.mat");
             _orangeMaterial = LoadMaterial("Assets/Materials/Campus/M_Campus_Orange.mat");
-            _lightFixtureMaterial = LoadMaterial("Assets/Materials/Campus/M_Campus_LampGlow_Sickly.mat");
         }
 
         private static Material LoadMaterial(string path)
@@ -296,12 +294,9 @@ namespace SpookyGame.EditorTools
             Transform architecture = CreateContainer(generated, "01_Architecture");
             Transform rooms = CreateContainer(generated, "02_Rooms_And_Furniture");
             Transform doors = CreateContainer(generated, "03_Functional_Doors");
-            Transform lights = CreateContainer(generated, "04_Interior_Lighting");
-
             Material exterior = LoadMaterial(definition.ExteriorMaterialPath);
             BuildShell(architecture, definition, exterior);
-            BuildCrossHallAndRooms(architecture, rooms, doors, lights, definition);
-            BuildHallLights(lights, definition);
+            BuildCrossHallAndRooms(architecture, rooms, doors, definition);
         }
 
         private static void PreserveMinimapOverlayWhileNormalizing(Transform building)
@@ -379,7 +374,6 @@ namespace SpookyGame.EditorTools
             Transform architecture,
             Transform rooms,
             Transform doors,
-            Transform lights,
             BuildingDefinition definition)
         {
             float usableWidth = definition.Width - ExteriorWallThickness * 2f;
@@ -453,35 +447,12 @@ namespace SpookyGame.EditorTools
                 Transform southRoom = CreateContainer(rooms, southName);
                 AddRoomFurniture(northRoom, northName, northCenter, roomWidth, northDepth, 1f);
                 AddRoomFurniture(southRoom, southName, southCenter, roomWidth, southDepth, -1f);
-                CreateCeilingLight(lights, northName + "_Light",
-                    northCenter + Vector3.up * (definition.WallHeight - 0.22f), definition.WallHeight, bay);
-                CreateCeilingLight(lights, southName + "_Light",
-                    southCenter + Vector3.up * (definition.WallHeight - 0.22f), definition.WallHeight, bay + 1);
             }
 
             InstantiateDoor(_doubleDoorPrefab, doors, "South_Main_Entrance",
                 new Vector3(0f, 0f, -definition.Depth * 0.5f), 0f);
             InstantiateDoor(_doubleDoorPrefab, doors, "North_Rear_Exit",
                 new Vector3(0f, 0f, definition.Depth * 0.5f), 0f);
-        }
-
-        private static void BuildHallLights(Transform lights, BuildingDefinition definition)
-        {
-            int hallLightCount = Mathf.Max(3, Mathf.CeilToInt(definition.Width / 9f));
-            for (int i = 0; i < hallLightCount; i++)
-            {
-                float t = (i + 1f) / (hallLightCount + 1f);
-                float x = Mathf.Lerp(-definition.Width * 0.5f + 2f, definition.Width * 0.5f - 2f, t);
-                CreateCeilingLight(lights, $"Main_Hall_Light_{i + 1:00}",
-                    new Vector3(x, definition.WallHeight - 0.22f, 0f), definition.WallHeight, i);
-            }
-
-            CreateCeilingLight(lights, "South_Lobby_Light",
-                new Vector3(0f, definition.WallHeight - 0.22f, -definition.Depth * 0.3f),
-                definition.WallHeight, 1);
-            CreateCeilingLight(lights, "North_Lobby_Light",
-                new Vector3(0f, definition.WallHeight - 0.22f, definition.Depth * 0.3f),
-                definition.WallHeight, 2);
         }
 
         private static void AddRoomFurniture(
@@ -560,35 +531,6 @@ namespace SpookyGame.EditorTools
                 new Vector3(0.12f, 0.45f, 0.42f), _metalMaterial, _groundWallLayer, true);
             CreateBox(bench, "Right_Support", center + new Vector3(width * 0.38f, 0.23f, 0f),
                 new Vector3(0.12f, 0.45f, 0.42f), _metalMaterial, _groundWallLayer, true);
-        }
-
-        private static void CreateCeilingLight(
-            Transform parent,
-            string name,
-            Vector3 position,
-            float ceilingHeight,
-            int variation)
-        {
-            Transform fixture = CreateContainer(parent, name);
-            fixture.localPosition = position;
-
-            CreateBox(fixture, "Fixture", Vector3.zero,
-                new Vector3(1.2f, 0.08f, 0.32f), _lightFixtureMaterial, 0, false);
-
-            var lightObject = new GameObject("Spot");
-            lightObject.transform.SetParent(fixture, false);
-            lightObject.transform.localPosition = new Vector3(0f, -0.1f, 0f);
-            lightObject.transform.localRotation = Quaternion.Euler(90f, 0f, 0f);
-            var light = lightObject.AddComponent<Light>();
-            light.type = LightType.Spot;
-            light.intensity = ceilingHeight > 6.5f ? 92f : 68f;
-            light.range = ceilingHeight > 6.5f ? 11f : 8.5f;
-            light.spotAngle = 88f;
-            light.innerSpotAngle = 52f;
-            light.color = variation % 4 == 0
-                ? new Color(0.58f, 0.72f, 0.42f)
-                : new Color(1f, 0.58f, 0.28f);
-            light.shadows = LightShadows.None;
         }
 
         private static void CreateWallSpanWithOpening(

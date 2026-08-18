@@ -4,6 +4,7 @@ using SpookyGame.Player.Data;
 using SpookyGame.Player.Configuration;
 using SpookyGame.Player.CameraFX;
 using SpookyGame.Utilities;
+using UnityEngine.InputSystem;
 
 namespace SpookyGame.Player
 {
@@ -96,8 +97,16 @@ namespace SpookyGame.Player
         // 2nd
         private void Update()
         {
-            if (GameManager.Instance.IsPaused)
+            // Scene teardown and editor play-mode transitions can briefly leave the
+            // singleton unset. Do not let that transient state disable the player's
+            // entire Update loop (movement, mouse look, interaction, and firing).
+            GameManager gameManager = GameManager.Instance;
+            if (gameManager != null && gameManager.IsPaused)
                 return;
+
+            // If the Editor/OS released mouse capture, the next click recaptures it.
+            // That click is consumed here rather than also firing the flashlight.
+            bool capturedCursorThisFrame = _look != null && _look.TryCaptureCursor();
             
             // Look runs at render rate so smoothing stays fluid and per-frame mouse deltas are consumed exactly once per frame.
             if (_look)
@@ -128,7 +137,7 @@ namespace SpookyGame.Player
             
             // Check for non-locomotion inputs.
             HandleInteractInput();
-            HandleItemInput();
+            HandleItemInput(capturedCursorThisFrame);
         }
 
         // 3rd
@@ -197,26 +206,42 @@ namespace SpookyGame.Player
                 _interactableSensor.TryInteract();
         }
         
-        private void HandleItemInput()
+        private void HandleItemInput(bool suppressPrimaryAction)
         {
             if (!_player) return;
             var inv = _player.Inventory;
 
             if (_input.HolsterPressed)
                 _player.ToggleHolster();
+
+            if (_input.FlashlightTogglePressed)
+                _player.ToggleSelectedLight(LightKind.Flashlight);
+
+            if (_input.ReloadPressed)
+                _player.TryReloadFlashlight();
         
             // Cycling implies intent to use — switching also draws.
             if (_input.NextPressed)     { _player.SetHolstered(false); inv.SelectNextItem(); }
             if (_input.PreviousPressed) { _player.SetHolstered(false); inv.SelectPreviousItem(); }
 
-            if (_input.ItemPressed)
+            bool primaryPressed = _input.ItemPressed ||
+                                  (Mouse.current != null &&
+                                   Mouse.current.leftButton.wasPressedThisFrame);
+            if (primaryPressed && !suppressPrimaryAction)
             {
                 if (_player.IsHolstered) _player.SetHolstered(false); // draw; consume the press
-                else                     inv.TryUseItem(gameObject);
+                else if (_player.IsSelectedLight(LightKind.Flashlight))
+                    _player.TryFireFlashlight();
+                else
+                    inv.TryUseItem(gameObject);
             }
         }
 
-        private void HandleCameraRig() { _cameraRig.SetMotionData(_camMotionData); }
+        private void HandleCameraRig()
+        {
+            if (_cameraRig != null)
+                _cameraRig.SetMotionData(_camMotionData);
+        }
 
         /// <summary>Moves the player instantly, without interpolation smearing across the jump.</summary>
         public void Teleport(Vector3 position)
@@ -233,6 +258,12 @@ namespace SpookyGame.Player
             _pendJumpPressed = _pendJumpReleased = _pendMoveCanceled = false;
             _prevSimPosition = _currSimPosition = position;
             transform.position = position;
+        }
+
+        public void SetCursorLocked(bool locked)
+        {
+            if (_look != null)
+                _look.SetCursorLocked(locked);
         }
     }
 }

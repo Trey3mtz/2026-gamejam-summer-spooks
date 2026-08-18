@@ -8,11 +8,11 @@ using UnityEngine;
 
 namespace SpookyGame.Player
 {
+    [RequireComponent(typeof(ActorHealth))]
     public class Player : MonoBehaviour
     {
-        // Reference to health, only used for saving/loading in this script here or for referencing.
-        private HealthBar _health;
-        public HealthBar Health => _health;
+        private ActorHealth _health;
+        public ActorHealth Health => _health;
         
         private PlayerInventory _inventory = new PlayerInventory();
         
@@ -22,9 +22,7 @@ namespace SpookyGame.Player
         
         private void Awake()
         {
-            _health = new HealthBar();
-            _health.InitHealthBar(10);
-            
+            _health = GetComponent<ActorHealth>();
             _lastRespawnPosition = transform.position;
         }
 
@@ -47,11 +45,47 @@ namespace SpookyGame.Player
         
         [SerializeField] private BatteryLight _flashlight = new BatteryLight();
         [SerializeField] private BatteryLight _blacklight = new BatteryLight();
+        [SerializeField] private FlashlightWeaponState _flashlightWeapon = new FlashlightWeaponState();
 
         public BatteryLight Flashlight => _flashlight;
         public BatteryLight Blacklight => _blacklight;
+        public FlashlightWeaponState FlashlightWeapon => _flashlightWeapon;
         
         public bool ToggleLight(LightKind kind) => GetLight(kind).Toggle();
+
+        public bool IsSelectedLight(LightKind kind)
+            => GetLightKind(Inventory.SelectedItem) == kind;
+
+        public bool ToggleSelectedLight(LightKind kind)
+        {
+            if (!IsSelectedLight(kind)) return false;
+            SetHolstered(false);
+            return ToggleLight(kind);
+        }
+
+        public bool TryFireFlashlight()
+        {
+            if (IsHolstered || !IsSelectedLight(LightKind.Flashlight)) return false;
+
+            FlashlightShooter shooter = GetComponentInChildren<FlashlightShooter>(true);
+            return shooter != null && shooter.TryFire(_flashlight, _flashlightWeapon);
+        }
+
+        public bool TryReloadFlashlight()
+        {
+            if (IsHolstered || !IsSelectedLight(LightKind.Flashlight))
+                return false;
+
+            return _flashlightWeapon.TryBeginReload();
+        }
+
+        public int AddFlashlightAmmo(int amount, int batteryRecharge = 0)
+        {
+            int added = _flashlightWeapon.AddReserveAmmo(amount);
+            if (batteryRecharge > 0)
+                _flashlight.Recharge(batteryRecharge);
+            return added;
+        }
 
         private void EvaluateHeldLight()
         {
@@ -82,6 +116,7 @@ namespace SpookyGame.Player
             EvaluateHeldLight();
             _flashlight.Tick(Time.deltaTime);
             _blacklight.Tick(Time.deltaTime);
+            _flashlightWeapon.Tick();
         }
         
         // ================================================================
@@ -99,6 +134,8 @@ namespace SpookyGame.Player
 
             data.FlashlightBatteryLife = _flashlight.BatteryLife;
             data.BlacklightBatteryLife = _blacklight.BatteryLife;
+            data.FlashlightMagazineAmmo = _flashlightWeapon.RoundsInMagazine;
+            data.FlashlightReserveAmmo = _flashlightWeapon.ReserveAmmo;
         }
 
         public void Load(PlayerSaveData data)
@@ -106,11 +143,12 @@ namespace SpookyGame.Player
             Inventory.Load(data.Inventory);
 
             _lastRespawnPosition = data.Position;
-            _health.InitHealthBar(data.MaxHealth);
+            _health.SetMaximumHealth(data.MaxHealth);
             _health.SetCurrentHealth(data.CurrentHealth);
 
-            _flashlight.BatteryLife = data.FlashlightBatteryLife;
-            _blacklight.BatteryLife = data.BlacklightBatteryLife;
+            _flashlight.SetBatteryLife(data.FlashlightBatteryLife);
+            _blacklight.SetBatteryLife(data.BlacklightBatteryLife);
+            _flashlightWeapon.SetAmmo(data.FlashlightMagazineAmmo, data.FlashlightReserveAmmo);
         }
     }
 }

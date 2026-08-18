@@ -102,6 +102,7 @@ GameObject:
   - component: {fileID: 3995897172487994057}
   - component: {fileID: 7566074695569165719}
   - component: {fileID: 4922865075364547597}
+  - component: {fileID: 6840271359981764215}
   m_Layer: 10
   m_Name: HeldFlashlightPrefab
   m_TagString: Untagged
@@ -196,6 +197,30 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.HeldLightVisual
   _kind: 0
   _light: {fileID: 1934897462340285394}
+--- !u!114 &6840271359981764215
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6905784067262271382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b4b0a4f0cd7c4eb6b1956cb1039f381d, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.FlashlightShooter
+  _batteryCost: 1
+  _damage: 25
+  _cooldownSeconds: 0.5
+  _range: 30
+  _hitLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  _flashlight: {fileID: 1934897462340285394}
+  _pulseIntensityMultiplier: 2.5
+  _pulseSeconds: 0.09
+  _beamWidth: 0.035
+  _beamColor: {r: 1, g: 0.035, b: 0.02, a: 0.98}
 --- !u!1 &8483333756339920353
 GameObject:
   m_ObjectHideFlags: 0

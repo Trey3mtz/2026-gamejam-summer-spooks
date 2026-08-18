@@ -89,6 +89,8 @@ GameObject:
   - component: {fileID: 852008201224921258}
   - component: {fileID: 7487434382388275268}
   - component: {fileID: 974351900826753166}
+  - component: {fileID: 887730100132000010}
+  - component: {fileID: 887730100132000011}
   - component: {fileID: 1541528555901294701}
   m_Layer: 10
   m_Name: Player
@@ -269,6 +271,41 @@ MonoBehaviour:
   _blacklight:
     _secondsPerPoint: 2
     BatteryLife: 100
+  _flashlightWeapon:
+    _magazineSize: 6
+    _roundsInMagazine: 6
+    _reserveAmmo: 24
+    _maximumReserveAmmo: 48
+    _reloadSeconds: 1.4
+--- !u!114 &887730100132000010
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2358478536600441846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a147410c2184f44a8fc777f70dd9023, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.ActorHealth
+  _maximumHp: 100
+  _damageInvulnerabilitySeconds: 0.45
+  _destroyOnDeath: 0
+  _deathDuration: 0.55
+  _deathFlashColor: {r: 0.35, g: 1, b: 0.95, a: 1}
+--- !u!114 &887730100132000011
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2358478536600441846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4f362e83ba4745f99e44152922e3afd9, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.UI.CombatHUD
 --- !u!114 &1541528555901294701
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -390,8 +427,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.InteractableSensor
   cameraTransform: {fileID: 8313305086576622973}
-  interactDistance: 1.5
-  castRadius: 0.3
+  interactDistance: 2.35
+  castRadius: 0.42
   interactableLayer:
     serializedVersion: 2
     m_Bits: 2048

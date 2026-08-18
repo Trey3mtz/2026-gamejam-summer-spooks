@@ -37,6 +37,7 @@ namespace SpookyGame.Player
         
         private float _targetYaw, _targetPitch;   // where input says to look (drives AimTarget)
         private float _yaw, _pitch;               // smoothed values applied to body/pivot
+        private bool _wantsCursorLocked;
  
         public Transform AimTarget => _aimTarget;
  
@@ -52,15 +53,26 @@ namespace SpookyGame.Player
  
         private void OnEnable()
         {
-            if (_lockCursorOnPlay) LockCursor(true);
+            _wantsCursorLocked = _lockCursorOnPlay;
+            if (_wantsCursorLocked) ApplyCursorLock(true);
             RefreshSettings();
             // TODO(settings): GameSettings.ControlsChanged += RefreshSettings;
         }
  
         private void OnDisable()
         {
-            LockCursor(false);
+            _wantsCursorLocked = false;
+            ApplyCursorLock(false);
             // TODO(settings): GameSettings.ControlsChanged -= RefreshSettings;
+        }
+
+        private void OnApplicationFocus(bool hasFocus)
+        {
+            // Unity releases cursor capture itself when the application loses focus.
+            // Do not change the requested gameplay state here: detached Game views can
+            // briefly report a focus transition while they are being activated.
+            if (hasFocus && _wantsCursorLocked)
+                ApplyCursorLock(true);
         }
  
         /// <summary>Re-reads user settings. Wire to the GameSettings change event.</summary>
@@ -78,11 +90,39 @@ namespace SpookyGame.Player
         /// </summary>
         public void Tick(Vector2 lookDelta, ControlDeviceType deviceType, float dt)
         {
-             if (Cursor.lockState != CursorLockMode.Locked)
-                 return;
-            
-             // Mouse deltas are per-frame displacements; gamepad sticks are a rate
-             // and must be scaled by dt to stay framerate-independent.
+            // Gameplay state is authoritative. Device Simulator intentionally turns mouse
+            // clicks into touch events and may refuse hardware cursor lock, so requiring the
+            // OS lock state here made its camera stop even though gameplay was active.
+            if (!_wantsCursorLocked)
+                return;
+
+            // Unity can release a locked cursor when the detached Game view gains or
+            // loses focus. Gameplay owns the lock, so restore it without requiring a
+            // click-and-drag gesture.
+            if (Cursor.lockState != CursorLockMode.Locked)
+                ApplyCursorLock(true);
+
+            // Device Simulator exposes its pointer as a touchscreen. Read that delta
+            // directly as a fallback so Shift + WASD never suppresses touch camera look.
+            if (Touchscreen.current != null && Touchscreen.current.primaryTouch.press.isPressed)
+            {
+                Vector2 touchDelta = Touchscreen.current.primaryTouch.delta.ReadValue();
+                if (touchDelta.sqrMagnitude > lookDelta.sqrMagnitude)
+                    lookDelta = touchDelta;
+            }
+
+            // Always poll the physical mouse. Unity's Device Simulator can leave the
+            // last-used device marked as Touchscreen after switching to the Game view;
+            // gating this by device type made mouse-look silently stop working there.
+            if (Mouse.current != null && Mouse.current.enabled)
+            {
+                Vector2 mouseDelta = Mouse.current.delta.ReadValue();
+                if (mouseDelta.sqrMagnitude > lookDelta.sqrMagnitude)
+                    lookDelta = mouseDelta;
+            }
+
+             // Mouse/touch deltas are per-frame displacements. Gamepad input is a rate
+             // and must be scaled by dt.
              float yawDelta, pitchDelta;
              if (deviceType == ControlDeviceType.Gamepad)
              {
@@ -124,12 +164,32 @@ namespace SpookyGame.Player
                  _aimTarget.localRotation = Quaternion.Euler(_targetPitch, _targetYaw - _yaw, 0f);
         }
 
-        private static void LockCursor(bool locked)
+        public void SetCursorLocked(bool locked)
+        {
+            _wantsCursorLocked = locked;
+            ApplyCursorLock(locked);
+        }
+
+        /// <summary>
+        /// Captures the cursor from an explicit click after the Editor or operating
+        /// system has released it. Returns true so the click is not also fired as a shot.
+        /// </summary>
+        public bool TryCaptureCursor()
+        {
+            if (!_wantsCursorLocked || Cursor.lockState == CursorLockMode.Locked ||
+                Mouse.current == null || !Mouse.current.leftButton.wasPressedThisFrame)
+                return false;
+
+            ApplyCursorLock(true);
+            return true;
+        }
+
+        private static void ApplyCursorLock(bool locked)
         {
             Cursor.lockState = locked ? CursorLockMode.Locked : CursorLockMode.None;
             Cursor.visible = !locked;
         }
- 
+
         private static float NormalizePitch(float euler) => euler > 180f ? euler - 360f : euler;
     }
 }

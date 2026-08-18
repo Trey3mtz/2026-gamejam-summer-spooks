@@ -11,9 +11,9 @@ namespace SpookyGame.Core.Item_Effects
         
         public void Execute(GameObject user, Vector3 targetPosition) 
         {
-            if (user.TryGetComponent(out HealthBar health)) 
+            if (user.TryGetComponent(out ActorHealth health))
             {
-                health.ChangeHealth(HurtAmount);
+                health.TakeDamage(Mathf.Abs(HurtAmount));
             }
         }
     }

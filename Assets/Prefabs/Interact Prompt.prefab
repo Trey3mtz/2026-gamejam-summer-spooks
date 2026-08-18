@@ -200,7 +200,7 @@ MonoBehaviour:
   fadeDuration: 0.4
   moveDuration: 0.35
   minTextSize: 0.06
-  maxTextSize: 2
+  maxTextSize: 0.22
   scaleDistanceCurve:
     serializedVersion: 2
     m_Curve:

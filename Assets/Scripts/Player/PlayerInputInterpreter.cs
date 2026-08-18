@@ -34,6 +34,8 @@ namespace SpookyGame.Player
         public bool NextPressed => _inputBuffers.Next;
         public bool PreviousPressed => _inputBuffers.Previous;
         public bool ItemPressed => _inputBuffers.Item;
+        public bool FlashlightTogglePressed => _inputBuffers.FlashlightToggle;
+        public bool ReloadPressed => _inputBuffers.Reload;
         public bool HolsterPressed => _inputBuffers.Holster;
         public bool PausePressed => _inputBuffers.Pause;
         
@@ -59,6 +61,8 @@ namespace SpookyGame.Player
             _inputReader.Crouch += OnCrouch;
             _inputReader.Interact += OnInteract;
             _inputReader.Item += OnItem;
+            _inputReader.FlashlightToggle += OnFlashlightToggle;
+            _inputReader.Reload += OnReload;
             _inputReader.Holster += OnHolster;
             _inputReader.Next += OnNext;
             _inputReader.Previous += OnPrevious;
@@ -78,6 +82,8 @@ namespace SpookyGame.Player
             _inputReader.Crouch -= OnCrouch;
             _inputReader.Interact -= OnInteract;
             _inputReader.Item -= OnItem;
+            _inputReader.FlashlightToggle -= OnFlashlightToggle;
+            _inputReader.Reload -= OnReload;
             _inputReader.Holster -= OnHolster;
             _inputReader.Next -= OnNext;
             _inputReader.Previous -= OnPrevious;
@@ -131,6 +137,16 @@ namespace SpookyGame.Player
         private void OnItem(bool pressed)
         {
             if (pressed) _inputBuffers.Item = true;
+        }
+
+        private void OnFlashlightToggle(bool pressed)
+        {
+            if (pressed) _inputBuffers.FlashlightToggle = true;
+        }
+
+        private void OnReload(bool pressed)
+        {
+            if (pressed) _inputBuffers.Reload = true;
         }
 
         private void OnHolster(bool pressed)

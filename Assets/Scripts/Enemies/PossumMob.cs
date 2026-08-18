@@ -1,4 +1,6 @@
 using System.Collections;
+using SpookyGame.Interfaces;
+using SpookyGame.Core;
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -11,7 +13,8 @@ namespace SpookyGame.Enemies
     /// </summary>
     [DisallowMultipleComponent]
     [RequireComponent(typeof(NavMeshAgent), typeof(CapsuleCollider), typeof(Rigidbody))]
-    public sealed class PossumMob : MonoBehaviour
+    [RequireComponent(typeof(ActorHealth))]
+    public sealed class PossumMob : MonoBehaviour, IFlashlightReactive
     {
         [Header("Player Awareness")]
         [Tooltip("Immediate proximity aggro radius, even if a wall is between the possum and player.")]
@@ -32,9 +35,12 @@ namespace SpookyGame.Enemies
         [SerializeField, Min(0.5f)] private float _zigZagForwardStep = 3.5f;
 
         [Header("Aggro Chase")]
-        [SerializeField, Min(0f)] private float _aggroSpeed = 15f;
+        [SerializeField, Min(0f)] private float _aggroSpeed = 18f;
         [SerializeField, Min(0f)] private float _chaseStoppingDistance = 1.1f;
         [SerializeField, Min(0.02f)] private float _repathInterval = 0.2f;
+
+        [Header("Flashlight Response")]
+        [SerializeField, Min(0f)] private float _flashlightStunSeconds = 0.5f;
 
         private NavMeshAgent _agent;
         private Transform _player;
@@ -51,6 +57,10 @@ namespace SpookyGame.Enemies
         private bool _zigZagRight;
         private string _aggroReason = "None";
         private int _wanderDestinationCount;
+        private float _stunnedUntil;
+        private bool _isFlashlightStunned;
+        private ActorHealth _health;
+        private PossumTerritory _territory;
 
         public bool IsInitialized => _initialized;
         public bool IsAggro => _isAggro;
@@ -67,6 +77,7 @@ namespace SpookyGame.Enemies
         private void Awake()
         {
             _agent = GetComponent<NavMeshAgent>();
+            _health = GetComponent<ActorHealth>();
             _spriteRenderer = GetComponentInChildren<SpriteRenderer>(true);
 
             if (_visibilityBlockers == 0)
@@ -91,6 +102,7 @@ namespace SpookyGame.Enemies
 
             _player = playerObject.transform;
             _playerCamera = Camera.main;
+            _territory = GetComponent<PossumTerritory>();
 
             if (!NavMesh.SamplePosition(transform.position, out NavMeshHit spawnHit,
                     _navMeshSampleRadius, NavMesh.AllAreas) || !_agent.Warp(spawnHit.position))
@@ -108,6 +120,31 @@ namespace SpookyGame.Enemies
         {
             if (!_initialized || _player == null || !_agent.isOnNavMesh)
                 return;
+
+            if (_territory != null && !_territory.ValidateAgentPosition(_agent))
+            {
+                BeginIdle();
+                return;
+            }
+
+            if (_health.IsDead)
+            {
+                _agent.isStopped = true;
+                return;
+            }
+
+            if (_isFlashlightStunned)
+            {
+                if (Time.time < _stunnedUntil)
+                {
+                    _agent.isStopped = true;
+                    return;
+                }
+
+                _isFlashlightStunned = false;
+                _agent.isStopped = false;
+                _nextRepathTime = 0f;
+            }
 
             UpdateAwareness();
 
@@ -138,7 +175,7 @@ namespace SpookyGame.Enemies
             _agent.height = 0.7f;
             _agent.baseOffset = 0f;
             _agent.speed = _wanderSpeed;
-            _agent.acceleration = 14f;
+            _agent.acceleration = 65f;
             _agent.angularSpeed = 0f;
             _agent.stoppingDistance = 0.3f;
             _agent.autoBraking = true;
@@ -149,6 +186,14 @@ namespace SpookyGame.Enemies
 
         private void UpdateAwareness()
         {
+            if (_territory != null && !_territory.IsPositionAllowed(_player.position))
+            {
+                _unnoticedTime = 0f;
+                if (_isAggro)
+                    CancelAggro();
+                return;
+            }
+
             float distance = DistanceToPlayer;
             if (distance <= _closeAggroRadius)
             {
@@ -262,16 +307,17 @@ namespace SpookyGame.Enemies
 
             if (!NavMesh.SamplePosition(candidate, out NavMeshHit hit,
                     _navMeshSampleRadius, NavMesh.AllAreas))
-                return _agent.SetDestination(_wanderGoal);
+                return TrySetDestination(_wanderGoal);
 
             var path = new NavMeshPath();
             if (!NavMesh.CalculatePath(transform.position, hit.position,
-                    NavMesh.AllAreas, path) || path.status != NavMeshPathStatus.PathComplete)
-                return _agent.SetDestination(_wanderGoal);
+                    _agent.areaMask, path) || path.status != NavMeshPathStatus.PathComplete ||
+                (_territory != null && !_territory.IsPathAllowed(path)))
+                return TrySetDestination(_wanderGoal);
 
             _zigZagRight = !_zigZagRight;
             _nextZigZagTime = Time.time + _zigZagInterval;
-            return _agent.SetDestination(hit.position);
+            return _agent.SetPath(path);
         }
 
         private bool TryChooseWanderDestination(out Vector3 destination)
@@ -285,12 +331,16 @@ namespace SpookyGame.Enemies
                         _navMeshSampleRadius, NavMesh.AllAreas))
                     continue;
 
+                if (_territory != null && !_territory.IsPositionAllowed(hit.position))
+                    continue;
+
                 if (PlanarDistance(transform.position, hit.position) < 2f)
                     continue;
 
                 var path = new NavMeshPath();
                 if (!NavMesh.CalculatePath(transform.position, hit.position,
-                        NavMesh.AllAreas, path) || path.status != NavMeshPathStatus.PathComplete)
+                        _agent.areaMask, path) || path.status != NavMeshPathStatus.PathComplete ||
+                    (_territory != null && !_territory.IsPathAllowed(path)))
                     continue;
 
                 destination = hit.position;
@@ -302,15 +352,22 @@ namespace SpookyGame.Enemies
 
         private void UpdateChase()
         {
+            if (_territory != null && !_territory.IsPositionAllowed(_player.position))
+            {
+                CancelAggro();
+                return;
+            }
+
             _agent.speed = _aggroSpeed;
             _agent.stoppingDistance = _chaseStoppingDistance;
+            _agent.autoBraking = false;
 
             if (Time.time < _nextRepathTime || _agent.pathPending)
                 return;
 
             _nextRepathTime = Time.time + _repathInterval;
             if (NavMesh.SamplePosition(_player.position, out NavMeshHit targetHit, 2.5f, NavMesh.AllAreas))
-                _agent.SetDestination(targetHit.position);
+                TrySetDestination(targetHit.position);
         }
 
         private void BeginAggro(string reason)
@@ -324,6 +381,7 @@ namespace SpookyGame.Enemies
             _agent.ResetPath();
             _agent.speed = _aggroSpeed;
             _agent.stoppingDistance = _chaseStoppingDistance;
+            _agent.autoBraking = false;
             _nextRepathTime = 0f;
         }
 
@@ -335,11 +393,51 @@ namespace SpookyGame.Enemies
             _waitUntil = Time.time + Random.Range(minimum, maximum);
         }
 
+        private void CancelAggro()
+        {
+            _isAggro = false;
+            _aggroReason = "OutsideTerritory";
+            _unnoticedTime = 0f;
+            _hasWanderGoal = false;
+            if (_agent.isOnNavMesh)
+                _agent.ResetPath();
+            _agent.speed = _wanderSpeed;
+            _agent.stoppingDistance = 0.3f;
+            _agent.autoBraking = true;
+            BeginIdle();
+        }
+
+        private bool TrySetDestination(Vector3 destination)
+        {
+            if (_territory != null && !_territory.IsPositionAllowed(destination))
+                return false;
+
+            var path = new NavMeshPath();
+            if (!NavMesh.CalculatePath(transform.position, destination, _agent.areaMask, path) ||
+                path.status != NavMeshPathStatus.PathComplete ||
+                (_territory != null && !_territory.IsPathAllowed(path)))
+                return false;
+
+            return _agent.SetPath(path);
+        }
+
         /// <summary>Used by automated scene validation; it does not add combat.</summary>
         public void DebugForceAggro()
         {
             if (_initialized)
                 BeginAggro("Validation");
+        }
+
+        public void OnFlashlightHit(Vector3 hitPoint, Vector3 shotDirection)
+        {
+            if (!_initialized || !_agent.isOnNavMesh || _health.IsDead)
+                return;
+
+            BeginAggro("FlashlightHit");
+            _stunnedUntil = Mathf.Max(_stunnedUntil, Time.time + _flashlightStunSeconds);
+            _isFlashlightStunned = true;
+            _agent.ResetPath();
+            _agent.isStopped = true;
         }
 
         private static float PlanarDistance(Vector3 a, Vector3 b)

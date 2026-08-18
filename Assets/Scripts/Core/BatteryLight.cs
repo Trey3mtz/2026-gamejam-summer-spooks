@@ -7,10 +7,11 @@ namespace SpookyGame.Core
     [Serializable]
     public class BatteryLight
     {
-        [SerializeField] private float _secondsPerPoint = 2f;
+        [SerializeField, Min(0.01f)] private float _secondsPerPoint = 2f;
         public int BatteryLife = 100;          // 0-100; public for Save/Load
         public bool IsOn { get; private set; }
         public event Action<bool> Toggled = delegate { };
+        public event Action<int> BatteryChanged = delegate { };
     
         private float _onDuration;
     
@@ -25,18 +26,49 @@ namespace SpookyGame.Core
         {
             if (!IsOn) return;
             _onDuration += dt;
-            if (_onDuration >= _secondsPerPoint)
+            float secondsPerPoint = Mathf.Max(0.01f, _secondsPerPoint);
+            while (_onDuration >= secondsPerPoint && IsOn)
             {
-                _onDuration = 0f;
-                if (--BatteryLife <= 0) { BatteryLife = 0; SetOn(false); }
+                _onDuration -= secondsPerPoint;
+                TrySpend(1);
             }
+        }
+
+        public bool TrySpend(int amount)
+        {
+            if (amount <= 0) return true;
+            if (BatteryLife < amount) return false;
+
+            BatteryLife = Mathf.Max(0, BatteryLife - amount);
+            BatteryChanged(BatteryLife);
+            if (BatteryLife == 0)
+                SetOn(false);
+            return true;
+        }
+
+        public void SetBatteryLife(int value)
+        {
+            BatteryLife = Mathf.Clamp(value, 0, 100);
+            BatteryChanged(BatteryLife);
+            if (BatteryLife == 0)
+                SetOn(false);
+        }
+
+        public int Recharge(int amount)
+        {
+            if (amount <= 0 || BatteryLife >= 100)
+                return 0;
+
+            int previous = BatteryLife;
+            BatteryLife = Mathf.Clamp(BatteryLife + amount, 0, 100);
+            BatteryChanged(BatteryLife);
+            return BatteryLife - previous;
         }
     
         private void SetOn(bool on)
         {
             if (IsOn == on) return;
             IsOn = on;
-            _onDuration = 0f;
             Toggled(on);
         }
 
