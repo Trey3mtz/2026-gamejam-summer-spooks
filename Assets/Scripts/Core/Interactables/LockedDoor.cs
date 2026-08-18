@@ -1,3 +1,4 @@
+using SpookyGame.Audio;
 using SpookyGame.Core.Item_System;
 using System;
 using UnityEngine;
@@ -6,8 +7,8 @@ namespace SpookyGame.Core.Interactables
 {
     public class LockedDoor : Interactable
     {
-        [SerializeField] private FMODUnity.EventReference _openSound;
-        [SerializeField] private FMODUnity.EventReference _rattleSound;
+        [SerializeField] private AudioClip _openSound;
+        [SerializeField] private AudioClip _rattleSound;
         [SerializeField] private ItemDefinition _requiredKey;
         [SerializeField] private bool _consumeKeyOnUse = false;
         private bool _unlocked;
@@ -26,18 +27,20 @@ namespace SpookyGame.Core.Interactables
             {
                 _unlocked = true;
                 if (_consumeKeyOnUse) player.Inventory.RemoveOne(_requiredKey);
-                Open(); // + FMOD unlock sting
+                Open();
             }
             else
             {
                 // rattle sound / "It's locked" prompt — leaving CanInteract true enables this feedback
-                FMODUnity.RuntimeManager.PlayOneShot(_rattleSound, transform.position);
+                if (AudioManager.Instance)
+                    AudioManager.Instance.PlaySoundFX(_rattleSound, transform);
             }
         }
-  
+
         private void Open()
         {
-            FMODUnity.RuntimeManager.PlayOneShot(_openSound, transform.position);
+            if (AudioManager.Instance)
+                AudioManager.Instance.PlaySoundFX(_openSound, transform);
         }
     }
 }

@@ -8,8 +8,7 @@ namespace SpookyGame.Utilities
     /// <summary>
     /// Central, PlayerPrefs-backed settings store. Systems read the typed properties and
     /// subscribe to the *Changed events to react. Audio values are stored as linear 0..1
-    /// scalars only — nothing here talks to FMOD yet. A future FMOD bridge subscribes to
-    /// AudioChanged and pushes the values onto its VCAs.
+    /// scalars only — the AudioManager subscribes to AudioChanged and applies them.
     /// Call Load() once at boot (e.g. GameManager.Awake).
     /// </summary>
     public static class GameSettings
@@ -34,8 +33,11 @@ namespace SpookyGame.Utilities
         public static event Action AudioChanged    = delegate { };
         public static event Action VideoChanged    = delegate { };
 
+        public static bool IsLoaded { get; private set; }
+
         public static void Load()
         {
+            IsLoaded = true;
             DynamicCamera = (DynamicCameraMode)PlayerPrefs.GetInt(K_DynamicCam, (int)DynamicCameraMode.On);
             LookSensitivity = PlayerPrefs.GetFloat(K_Sensitivity, 0.12f);
             InvertY         = PlayerPrefs.GetInt(K_InvertY, 0) == 1;
@@ -75,7 +77,7 @@ namespace SpookyGame.Utilities
             ControlsChanged();
         }
 
-        // --- Audio (FMOD bridge listens to AudioChanged) ---
+        // --- Audio (AudioManager listens to AudioChanged) ---
         public static void SetMasterVolume(float v)   { MasterVolume   = Clamp01Save(K_Master, v);   AudioChanged(); }
         public static void SetMusicVolume(float v)    { MusicVolume    = Clamp01Save(K_Music, v);    AudioChanged(); }
         public static void SetSfxVolume(float v)      { SfxVolume      = Clamp01Save(K_Sfx, v);      AudioChanged(); }

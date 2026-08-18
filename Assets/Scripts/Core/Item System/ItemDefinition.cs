@@ -32,7 +32,7 @@ namespace SpookyGame.Core.Item_System
         [Tooltip("Logic pieces that will execute when this item is used.")]
         [SerializeReference, SubclassPicker]
         public List<IItemEffect> Effects = new List<IItemEffect>();        
-        public FMODUnity.EventReference UseSound;
+        public AudioClip UseSound;
         
 
 
@@ -42,13 +42,9 @@ namespace SpookyGame.Core.Item_System
             foreach(var effect in Effects)
                 effect.Execute(user, targetPosition);
 
-            // We check if the event is null (unassigned) before trying to play it to prevent errors in the console.
-            if (!UseSound.IsNull)
-            {
-                // PlayOneShot handles creating the instance, playing it, and releasing it automatically.
-                // Passing in targetPosition ensures 3D sounds spatialize correctly in the world.
-                FMODUnity.RuntimeManager.PlayOneShot(UseSound, targetPosition);
-            }
+            // Played at the user so the pooled source follows them for the clip's duration.
+            if (UseSound && Audio.AudioManager.Instance)
+                Audio.AudioManager.Instance.PlaySoundFX(UseSound, user.transform);
         }
         
 
