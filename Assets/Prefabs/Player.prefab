@@ -288,7 +288,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a147410c2184f44a8fc777f70dd9023, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.ActorHealth
   _maximumHp: 100
   _damageInvulnerabilitySeconds: 0.45
@@ -305,7 +305,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 4f362e83ba4745f99e44152922e3afd9, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.UI.CombatHUD
 --- !u!114 &1541528555901294701
 MonoBehaviour:
@@ -319,6 +319,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f8ed0b11850145c4995dd76170bb2500, type: 3}
   m_Name: 
   m_EditorClassIdentifier: UnityEngine.TestRunner::UnityEngine.TestTools.TestRunner.Callbacks.PlayerQuitHandler
+--- !u!114 &5183947261024856190
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2358478536600441846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 2c012b72099dabc7ad52df5d5b26271c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _footstepSFX: {fileID: 8300000, guid: 622f42e8d781b8a44b119174e4ed9708, type: 3}
+  _strideLength: 2.8
+  _volume: 0.08
+  _pitchRange: {x: 0.8, y: 1.1}
+  _minSpeed: 0.2
+  _controller: {fileID: 852008201224921258}
 --- !u!1 &2461224079265389633
 GameObject:
   m_ObjectHideFlags: 0
@@ -617,21 +635,3 @@ AudioListener:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 8420527609798755570}
   m_Enabled: 1
---- !u!114 &5183947261024856190
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2358478536600441846}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 2c012b72099dabc7ad52df5d5b26271c, type: 3}
-  m_Name:
-  m_EditorClassIdentifier:
-  _footstepSFX: {fileID: 0}
-  _strideLength: 2.2
-  _volume: 0.8
-  _pitchRange: {x: 0.92, y: 1.08}
-  _minSpeed: 0.5
-  _controller: {fileID: 0}
