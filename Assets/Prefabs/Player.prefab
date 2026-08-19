@@ -43,7 +43,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fb10794bc4813bc4ab31e6db7affee12, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.CameraFX.CameraRig
   _headBob:
     _walkAmplitude: 0.03
@@ -93,6 +93,7 @@ GameObject:
   - component: {fileID: 887730100132000011}
   - component: {fileID: 1541528555901294701}
   - component: {fileID: 5183947261024856190}
+  - component: {fileID: 730000000000000001}
   m_Layer: 10
   m_Name: Player
   m_TagString: Player
@@ -334,12 +335,35 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 2c012b72099dabc7ad52df5d5b26271c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _footstepSFX: {fileID: 8300000, guid: 622f42e8d781b8a44b119174e4ed9708, type: 3}
+  _footstepSFX:
+  - {fileID: 8300000, guid: eec53751c4e79a7469fc34e774360128, type: 3}
+  - {fileID: 8300000, guid: dbe4405baeea2404ba3d422430b5fd3b, type: 3}
+  - {fileID: 8300000, guid: c8657061120b2da4fb645654b16201f6, type: 3}
+  - {fileID: 8300000, guid: 8ff53086d637af8478c1408b78b3dd05, type: 3}
+  - {fileID: 8300000, guid: b662731f964d624449b092d4198147de, type: 3}
   _strideLength: 2.8
   _volume: 0.08
   _pitchRange: {x: 0.8, y: 1.1}
   _minSpeed: 0.2
   _controller: {fileID: 852008201224921258}
+--- !u!114 &730000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2358478536600441846}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c9b91500188f4b54bbab53d1203020c2, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Audio.PlayerAudioFeedback
+  _shotSfx: {fileID: 8300000, guid: 4139162f635014b5db7fdb69147ad0f8, type: 3}
+  _reloadSfx: {fileID: 8300000, guid: 552e1ee9826bb42fe83505a9defb673d, type: 3}
+  _dryFireSfx: {fileID: 8300000, guid: 8af5749b172a645a68265fc8c9ed216d, type: 3}
+  _powerBlockedSfx: {fileID: 8300000, guid: 16458abe8d5a64f7a8082f0de46d643f, type: 3}
+  _shotVolume: 0.7
+  _mechanismVolume: 0.65
 --- !u!1 &2461224079265389633
 GameObject:
   m_ObjectHideFlags: 0

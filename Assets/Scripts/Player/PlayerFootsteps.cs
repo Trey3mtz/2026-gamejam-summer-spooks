@@ -13,7 +13,7 @@ namespace SpookyGame.Player
     /// </summary>
     public class PlayerFootsteps : MonoBehaviour
     {
-        [SerializeField] private AudioClip _footstepSFX;
+        [SerializeField] private AudioClip[] _footstepSFX;
         [Tooltip("Meters of horizontal travel between steps.")]
         [SerializeField] private float _strideLength = 2.2f;
         [SerializeField] private float _volume = 0.8f;
@@ -26,6 +26,7 @@ namespace SpookyGame.Player
 
         private float _distanceSinceStep;
         private bool _wasGrounded;
+        private int _lastClipIndex = -1;
 
         private void Awake()
         {
@@ -35,7 +36,7 @@ namespace SpookyGame.Player
 
         private void Update()
         {
-            if (!_controller || !_footstepSFX)
+            if (!_controller || _footstepSFX == null || _footstepSFX.Length == 0)
                 return;
 
             GameManager gameManager = GameManager.Instance;
@@ -59,9 +60,22 @@ namespace SpookyGame.Player
                 return;
 
             _distanceSinceStep = 0f;
-            if (AudioManager.Instance)
-                AudioManager.Instance.PlaySoundFX(_footstepSFX, transform, _volume,
+            AudioClip clip = ChooseClip();
+            if (clip != null && AudioManager.Instance)
+                AudioManager.Instance.PlaySoundFX(clip, transform, _volume,
                     Random.Range(_pitchRange.x, _pitchRange.y));
+        }
+
+        private AudioClip ChooseClip()
+        {
+            if (_footstepSFX.Length == 1)
+                return _footstepSFX[0];
+
+            int index = Random.Range(0, _footstepSFX.Length);
+            if (index == _lastClipIndex)
+                index = (index + 1) % _footstepSFX.Length;
+            _lastClipIndex = index;
+            return _footstepSFX[index];
         }
     }
 }

@@ -742,6 +742,8 @@ MonoBehaviour:
   _bobHeight: 0.18
   _bobSpeed: 2
   _rotationSpeed: 26
+  _pickupSound: {fileID: 8300000, guid: 84fc4232d2e994c8280d6b798a1415cc, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &6717326407735358109
 GameObject:
   m_ObjectHideFlags: 0
