@@ -17,6 +17,7 @@ GameObject:
   - component: {fileID: 34246875512025517}
   - component: {fileID: 3206670371374203860}
   - component: {fileID: 730000000000000004}
+  - component: {fileID: 750000000000000002}
   m_Layer: 6
   m_Name: Llorona_Boss
   m_TagString: Untagged
@@ -73,7 +74,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 0a147410c2184f44a8fc777f70dd9023, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Core.ActorHealth
   _maximumHp: 200
   _damageInvulnerabilitySeconds: 0.1
@@ -101,6 +102,11 @@ MonoBehaviour:
   _nearVisibilityDistance: 18
   _maximumVisibilityDistance: 55
   _barColor: {r: 0.72, g: 0.12, b: 0.95, a: 1}
+  _labelMinBrightness: 0.04
+  _lightSensitivity: 1
+  _occluderMask:
+    serializedVersion: 2
+    m_Bits: 0
 --- !u!114 &720000000000000003
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -119,32 +125,18 @@ MonoBehaviour:
   _attackCooldown: 1.46
   _damageWindup: 0.7018
   _attackAnimationTrigger: Attack
+  _showPossumScratchOnHit: 0
+  _screenHitFrames: []
+  _screenHitSecondsPerFrame: 0.08
+  _screenHitHoldSeconds: 0.16
+  _lineOfSightLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
   _attackWindupSfx: {fileID: 8300000, guid: 134bab590d7624647a39e5ccb50d9cf5, type: 3}
   _attackImpactSfx: {fileID: 0}
   _windupVolume: 0.8
   _impactVolume: 0.75
   _pitchRange: {x: 0.96, y: 1.02}
-  _lineOfSightLayers:
-    serializedVersion: 2
-    m_Bits: 4294967295
---- !u!114 &730000000000000004
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1762621088610283034}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d488e1f32f6248828bac3ab5b6c34cad, type: 3}
-  m_Name:
-  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Audio.EnemyFootsteps
-  _clips:
-  - {fileID: 8300000, guid: c0ac8cb41ea41403c8ba98147d940a75, type: 3}
-  _strideLength: 1.8
-  _volume: 0.28
-  _pitchRange: {x: 0.92, y: 1.04}
-  _minimumSpeed: 0.15
 --- !u!114 &720000000000000004
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -206,6 +198,50 @@ MonoBehaviour:
   _walkCyclesPerSecond: 3.2
   _walkLeanDegrees: 2.5
   _flashlightStunSeconds: 0.35
+--- !u!114 &730000000000000004
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762621088610283034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d488e1f32f6248828bac3ab5b6c34cad, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Audio.EnemyFootsteps
+  _clips:
+  - {fileID: 8300000, guid: c0ac8cb41ea41403c8ba98147d940a75, type: 3}
+  _strideLength: 1.8
+  _volume: 0.28
+  _pitchRange: {x: 0.92, y: 1.04}
+  _minimumSpeed: 0.15
+  _minimumStepInterval: 0.22
+  _audibleDistance: 28
+--- !u!114 &750000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1762621088610283034}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 501c04d2d1e97684d9dce226c49dc197, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Audio.EnemyHurtSFX
+  _hurtSounds:
+  - Clip: {fileID: 8300000, guid: 4c8a00a22f049430a996ecf7a9d0fa44, type: 3}
+    Volume: 0.2
+    PitchRange: {x: 1.1, y: 1.2}
+  - Clip: {fileID: 8300000, guid: 51ef705faaa8641208b8846bb20cfb66, type: 3}
+    Volume: 0.2
+    PitchRange: {x: 1, y: 1.2}
+  _deathSound:
+    Clip: {fileID: 8300000, guid: f6e2481bc21114b15995fd0069f11fda, type: 3}
+    Volume: 0.3
+    PitchRange: {x: 1.1, y: 1.15}
+  _minimumInterval: 0.1
 --- !u!1 &3871774915021811843
 GameObject:
   m_ObjectHideFlags: 0
