@@ -48,7 +48,7 @@ MeshRenderer:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 4819605407152965892}
-  m_Enabled: 1
+  m_Enabled: 0
   m_CastShadows: 1
   m_ReceiveShadows: 1
   m_DynamicOccludee: 1
@@ -207,7 +207,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: b4b0a4f0cd7c4eb6b1956cb1039f381d, type: 3}
-  m_Name:
+  m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.FlashlightShooter
   _batteryCost: 1
   _damage: 25
@@ -248,7 +248,7 @@ Transform:
   m_GameObject: {fileID: 8483333756339920353}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0.1042}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -268,8 +268,8 @@ Light:
   m_Color: {r: 0.82, g: 0.91, b: 1, a: 1}
   m_Intensity: 260
   m_Range: 22
-  m_SpotAngle: 34
-  m_InnerSpotAngle: 22
+  m_SpotAngle: 69.33502
+  m_InnerSpotAngle: 16.42075
   m_CookieSize2D: {x: 0.5, y: 0.5}
   m_Shadows:
     m_Type: 2

@@ -18,16 +18,10 @@ MonoBehaviour:
   Category: 1
   Icon: {fileID: 5089934014483243112, guid: 621beb6a902f3b141984013efc161256, type: 3}
   WorldPrefab: {fileID: 6402639977425665540, guid: 66646365ede2e134bbe36e8a6ce04ecd, type: 3}
-  UseSound:
-    Guid:
-      Data1: 0
-      Data2: 0
-      Data3: 0
-      Data4: 0
-    Path: 
   HeldPrefab: {fileID: 6905784067262271382, guid: cefb4dba68c419349b9fc2db894a149c, type: 3}
   Effects:
   - rid: 1839836212975894615
+  UseSound: {fileID: 8300000, guid: 68d3655a2d1d8464abe0c1668fcd80be, type: 3}
   references:
     version: 2
     RefIds:
