@@ -5,12 +5,16 @@ using SpookyGame.Core.Item_Effects;
 using SpookyGame.Core.Item_System;
 using SpookyGame.Player.Data;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 namespace SpookyGame.Player
 {
     [RequireComponent(typeof(ActorHealth))]
     public class Player : MonoBehaviour
     {
+        [SerializeField] private AudioClip _toggleFlashlightSfx;
+        [SerializeField] private float lightSfxVolume = 1;
+        [SerializeField] private Vector2 _lightSfxPitchRange = new Vector2(1f, 1.02f);
         private ActorHealth _health;
         public ActorHealth Health => _health;
         
@@ -51,7 +55,13 @@ namespace SpookyGame.Player
         public BatteryLight Blacklight => _blacklight;
         public FlashlightWeaponState FlashlightWeapon => _flashlightWeapon;
         
-        public bool ToggleLight(LightKind kind) => GetLight(kind).Toggle();
+        public bool ToggleLight(LightKind kind)
+        {
+            if (GetLight(kind).Toggle())
+                return true;
+            
+            return false;
+        }
 
         public bool IsSelectedLight(LightKind kind)
             => GetLightKind(Inventory.SelectedItem) == kind;
@@ -60,7 +70,14 @@ namespace SpookyGame.Player
         {
             if (!IsSelectedLight(kind)) return false;
             SetHolstered(false);
-            return ToggleLight(kind);
+            bool result = ToggleLight(kind);
+            if (result)
+                Audio.AudioManager.Instance.PlaySoundFX(_toggleFlashlightSfx, transform, lightSfxVolume, Random.Range(_lightSfxPitchRange.x, _lightSfxPitchRange.y));
+            else
+            {
+                Audio.AudioManager.Instance.PlaySoundFX(_toggleFlashlightSfx, transform, lightSfxVolume, Random.Range(_lightSfxPitchRange.x*.9f, _lightSfxPitchRange.y*.9f));
+            }
+            return result;
         }
 
         public bool TryFireFlashlight()

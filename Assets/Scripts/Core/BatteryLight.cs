@@ -7,6 +7,8 @@ namespace SpookyGame.Core
     [Serializable]
     public class BatteryLight
     {
+
+        
         [SerializeField, Min(0.01f)] private float _secondsPerPoint = 2f;
         public int BatteryLife = 100;          // 0-100; public for Save/Load
         public bool IsOn { get; private set; }

@@ -33,18 +33,18 @@ namespace SpookyGame.Core.Item_System
         [SerializeReference, SubclassPicker]
         public List<IItemEffect> Effects = new List<IItemEffect>();        
         public AudioClip UseSound;
-        
-
+        public float SoundPitch = 1;
+        public float AudioVolume = 1;
 
         // This is the call to use the item
         public void Execute(GameObject user, Vector3 targetPosition)
         {
             foreach(var effect in Effects)
                 effect.Execute(user, targetPosition);
-
+            Debug.Log($"Item {ItemName} used by {user.name}");
             // Played at the user so the pooled source follows them for the clip's duration.
             if (UseSound && Audio.AudioManager.Instance)
-                Audio.AudioManager.Instance.PlaySoundFX(UseSound, user.transform);
+                Audio.AudioManager.Instance.PlaySoundFX(UseSound, user.transform, AudioVolume, SoundPitch);
         }
         
 

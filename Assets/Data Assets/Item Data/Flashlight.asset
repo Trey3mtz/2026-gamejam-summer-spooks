@@ -22,6 +22,8 @@ MonoBehaviour:
   Effects:
   - rid: 1839836212975894615
   UseSound: {fileID: 8300000, guid: 68d3655a2d1d8464abe0c1668fcd80be, type: 3}
+  SoundPitch: 1
+  AudioVolume: 0.5
   references:
     version: 2
     RefIds:
