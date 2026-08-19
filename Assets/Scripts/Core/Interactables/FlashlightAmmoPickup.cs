@@ -1,4 +1,5 @@
 using System.Collections;
+using SpookyGame.Audio;
 using SpookyGame.Player;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace SpookyGame.Core.Interactables
         [SerializeField, Min(0f)] private float _bobHeight = 0.22f;
         [SerializeField, Min(0f)] private float _bobSpeed = 2f;
         [SerializeField, Min(0f)] private float _rotationSpeed = 34f;
+        [SerializeField] private AudioClip _pickupSound;
+        [SerializeField, Range(0f, 1f)] private float _pickupVolume = 0.72f;
 
         private Vector3 _basePosition;
         private Transform _visualRoot;
@@ -73,13 +76,17 @@ namespace SpookyGame.Core.Interactables
                 return;
 
             _collected = true;
+            if (_pickupSound != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySoundFX(_pickupSound, transform, _pickupVolume, 1f);
             StartCoroutine(CollectRoutine());
         }
 
-        public void Configure(int ammoAmount, int batteryRecharge)
+        public void Configure(int ammoAmount, int batteryRecharge, AudioClip pickupSound = null)
         {
             _ammoAmount = Mathf.Max(1, ammoAmount);
             _batteryRecharge = Mathf.Max(0, batteryRecharge);
+            if (pickupSound != null)
+                _pickupSound = pickupSound;
             RefreshLabel();
         }
 

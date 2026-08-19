@@ -1,3 +1,4 @@
+using SpookyGame.Audio;
 using SpookyGame.Core;
 using SpookyGame.UI;
 using UnityEngine;
@@ -29,6 +30,13 @@ namespace SpookyGame.Enemies
         [SerializeField, Min(0.01f)] private float _screenHitSecondsPerFrame = 0.08f;
         [SerializeField, Min(0f)] private float _screenHitHoldSeconds = 0.16f;
         [SerializeField] private LayerMask _lineOfSightLayers = ~0;
+
+        [Header("Audio")]
+        [SerializeField] private AudioClip _attackWindupSfx;
+        [SerializeField] private AudioClip _attackImpactSfx;
+        [SerializeField, Range(0f, 1f)] private float _windupVolume = 0.65f;
+        [SerializeField, Range(0f, 1f)] private float _impactVolume = 0.75f;
+        [SerializeField] private Vector2 _pitchRange = new Vector2(0.96f, 1.04f);
 
         private ActorHealth _ownHealth;
         private ActorHealth _playerHealth;
@@ -83,6 +91,7 @@ namespace SpookyGame.Enemies
         private void BeginAttack()
         {
             _nextAttackTime = Time.time + _attackCooldown;
+            PlaySfx(_attackWindupSfx, _windupVolume);
             if (_animator != null && !string.IsNullOrWhiteSpace(_attackAnimationTrigger) &&
                 HasAnimatorParameter(_attackAnimationTrigger, AnimatorControllerParameterType.Trigger))
             {
@@ -105,11 +114,22 @@ namespace SpookyGame.Enemies
             if (!_playerHealth.TakeDamage(_damage))
                 return;
 
+            PlaySfx(_attackImpactSfx, _impactVolume);
+
             if (_showPossumScratchOnHit)
                 _possumScratchEffect?.PlayScratch();
             else if (_screenHitFrames != null && _screenHitFrames.Length > 0)
                 _possumScratchEffect?.Play(
                     _screenHitFrames, _screenHitSecondsPerFrame, _screenHitHoldSeconds);
+        }
+
+        private void PlaySfx(AudioClip clip, float volume)
+        {
+            if (clip != null && AudioManager.Instance != null)
+            {
+                AudioManager.Instance.PlaySoundFX(clip, transform, volume,
+                    Random.Range(_pitchRange.x, _pitchRange.y));
+            }
         }
 
         private bool CanAttackNow()

@@ -1,4 +1,5 @@
 using System.Collections;
+using SpookyGame.Audio;
 using SpookyGame.Player;
 using TMPro;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace SpookyGame.Core.Interactables
         [SerializeField, Min(0f)] private float _bobHeight = 0.18f;
         [SerializeField, Min(0f)] private float _bobSpeed = 2f;
         [SerializeField, Min(0f)] private float _rotationSpeed = 26f;
+        [SerializeField] private AudioClip _pickupSound;
+        [SerializeField, Range(0f, 1f)] private float _pickupVolume = 0.72f;
 
         private SphereCollider _trigger;
         private Camera _camera;
@@ -62,6 +65,8 @@ namespace SpookyGame.Core.Interactables
                 return;
 
             _collected = true;
+            if (_pickupSound != null && AudioManager.Instance != null)
+                AudioManager.Instance.PlaySoundFX(_pickupSound, transform, _pickupVolume, 1f);
             StartCoroutine(CollectRoutine());
         }
 

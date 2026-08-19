@@ -126,7 +126,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 14340ff98880ba1438c262fd1c5401cd, type: 3}
-  m_Name: 
+  m_Name:
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Rendering.SpriteBillboard
   _spriteRenderer: {fileID: 0}
   _movementAgent: {fileID: 0}
@@ -147,6 +147,7 @@ GameObject:
   - component: {fileID: 710000000000000001}
   - component: {fileID: 710000000000000002}
   - component: {fileID: 710000000000000003}
+  - component: {fileID: 730000000000000002}
   m_Layer: 6
   m_Name: Possum_Mob
   m_TagString: Untagged
@@ -329,9 +330,35 @@ MonoBehaviour:
   _damageWindup: 0.253
   _attackAnimationTrigger: 
   _showPossumScratchOnHit: 1
-  _screenHitFrames: []
-  _screenHitSecondsPerFrame: 0.08
-  _screenHitHoldSeconds: 0.16
+  _attackWindupSfx: {fileID: 8300000, guid: 23521bf6cf1e34f51ba1a86ec9553326, type: 3}
+  _attackImpactSfx: {fileID: 8300000, guid: 0d5dab2d9e8a04cb8a1b06c583193e55, type: 3}
+  _windupVolume: 0.55
+  _impactVolume: 0.65
+  _pitchRange: {x: 1.08, y: 1.18}
   _lineOfSightLayers:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!114 &730000000000000002
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3436369458404510753}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d488e1f32f6248828bac3ab5b6c34cad, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Audio.EnemyFootsteps
+  _clips:
+  - {fileID: 8300000, guid: 0609acde86b59a2458aaf135531f8756, type: 3}
+  - {fileID: 8300000, guid: fdfa07727ba18e146b0d737f16110ba5, type: 3}
+  - {fileID: 8300000, guid: e988fcf175fd1874db4f82c3b2d75db3, type: 3}
+  - {fileID: 8300000, guid: 98e005e2d5100484b88927d0803cb395, type: 3}
+  - {fileID: 8300000, guid: b3e9cdac26b78934197456d8199e30bc, type: 3}
+  - {fileID: 8300000, guid: ddc4973571f36404d95c23401b7d2f12, type: 3}
+  - {fileID: 8300000, guid: 8c9f76b14113ab640ab4b94535ad82e3, type: 3}
+  _strideLength: 1.2
+  _volume: 0.3
+  _pitchRange: {x: 1.12, y: 1.25}
+  _minimumSpeed: 0.15

@@ -37984,6 +37984,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &467646331
 GameObject:
   m_ObjectHideFlags: 0
@@ -48869,6 +48871,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &627274786
 GameObject:
   m_ObjectHideFlags: 0
@@ -54664,6 +54668,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &716983988
 GameObject:
   m_ObjectHideFlags: 0
@@ -64813,6 +64819,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &862453985
 GameObject:
   m_ObjectHideFlags: 0
@@ -64862,6 +64870,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &862739138
 GameObject:
   m_ObjectHideFlags: 0
@@ -74073,6 +74083,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &976424156
 GameObject:
   m_ObjectHideFlags: 0
@@ -91813,6 +91825,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &1184543091
 GameObject:
   m_ObjectHideFlags: 0
@@ -117748,6 +117762,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &1505440545
 GameObject:
   m_ObjectHideFlags: 0
@@ -122634,6 +122650,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &1560028739
 GameObject:
   m_ObjectHideFlags: 0
@@ -149744,6 +149762,8 @@ MonoBehaviour:
   _bobHeight: 0.22
   _bobSpeed: 2
   _rotationSpeed: 34
+  _pickupSound: {fileID: 8300000, guid: 2f4351bb0de91421aaef1acbf4bb5110, type: 3}
+  _pickupVolume: 0.72
 --- !u!1 &1908639549
 GameObject:
   m_ObjectHideFlags: 0

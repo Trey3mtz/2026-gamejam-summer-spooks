@@ -62,6 +62,8 @@ namespace SpookyGame.Gameplay
 
         public event Action<int, int> ProgressChanged = delegate { };
         public event Action<string> ObjectiveCollected = delegate { };
+        public event Action RunStarted = delegate { };
+        public event Action<bool> RunEnded = delegate { };
 
         private void Awake()
         {
@@ -182,6 +184,7 @@ namespace SpookyGame.Gameplay
             Time.timeScale = 1f;
             SetGameplayEnabled(true);
             ShowNotification("OBJECTIVE ACTIVE  //  SEARCH EVERY BUILDING");
+            RunStarted();
         }
 
         private void EndRun(bool victory)
@@ -202,6 +205,7 @@ namespace SpookyGame.Gameplay
             _resultDetails.gameObject.SetActive(true);
             ConfigurePrimaryButton("START A NEW RUN", RestartRun);
             SelectButton(_primaryButton);
+            RunEnded(victory);
         }
 
         private void RestartRun()

@@ -12,6 +12,7 @@ namespace SpookyGame.Core.Interactables
         [SerializeField, Range(1, 24)] private int _pickupCount = 10;
         [SerializeField, Min(1)] private int _ammoPerPickup = 12;
         [SerializeField, Min(0)] private int _batteryPerPickup = 35;
+        [SerializeField] private AudioClip _pickupSound;
         [SerializeField, Min(0f)] private float _minimumPlayerDistance = 18f;
         [SerializeField, Min(0f)] private float _minimumPickupSpacing = 22f;
         [SerializeField, Range(10, 1000)] private int _attemptsPerPickup = 250;
@@ -66,7 +67,7 @@ namespace SpookyGame.Core.Interactables
                 pickupObject.transform.SetParent(container, true);
                 pickupObject.transform.position = position + Vector3.up * 1.15f;
                 FlashlightAmmoPickup pickup = pickupObject.AddComponent<FlashlightAmmoPickup>();
-                pickup.Configure(_ammoPerPickup, _batteryPerPickup);
+                pickup.Configure(_ammoPerPickup, _batteryPerPickup, _pickupSound);
                 _positions.Add(position);
                 SpawnedCount++;
             }
