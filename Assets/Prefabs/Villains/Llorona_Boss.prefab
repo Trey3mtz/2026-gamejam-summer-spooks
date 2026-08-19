@@ -94,6 +94,8 @@ MonoBehaviour:
   _displayName: LA LLORONA
   _height: 3.1
   _width: 270
+  _worldScale: 0.008
+  _labelFontSize: 15
   _alwaysVisible: 1
   _nearVisibilityDistance: 18
   _maximumVisibilityDistance: 55
@@ -116,6 +118,10 @@ MonoBehaviour:
   _attackCooldown: 1.46
   _damageWindup: 0.7018
   _attackAnimationTrigger: Attack
+  _showPossumScratchOnHit: 0
+  _screenHitFrames: []
+  _screenHitSecondsPerFrame: 0.08
+  _screenHitHoldSeconds: 0.16
   _lineOfSightLayers:
     serializedVersion: 2
     m_Bits: 4294967295
@@ -169,6 +175,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 382ee7dfdfefa5e4db4338dda80ef52b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Enemies.LloronaSecondFloorChase
+  _bossArenaDoor: {fileID: 0}
   _aggroDistance: 22
   _repathInterval: 0.15
   _movementSpeed: 11
@@ -239,7 +246,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 538f8df14d59f4c4d91aa3a0f1849b23, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0

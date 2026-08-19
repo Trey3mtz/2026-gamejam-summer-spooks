@@ -209,6 +209,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Vaquero_Visual
       objectReference: {fileID: 0}
+    - target: {fileID: 3626916397498700004, guid: cb173cb4357462543ae75dd45bb2c94a, type: 3}
+      propertyPath: 'm_Materials.Array.data[0]'
+      value: 
+      objectReference: {fileID: 2100000, guid: 538f8df14d59f4c4d91aa3a0f1849b23, type: 2}
     - target: {fileID: 7878350319992209165, guid: cb173cb4357462543ae75dd45bb2c94a, type: 3}
       propertyPath: m_LocalScale.x
       value: 0.3

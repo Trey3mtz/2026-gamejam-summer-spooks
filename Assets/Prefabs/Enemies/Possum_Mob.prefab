@@ -60,7 +60,7 @@ SpriteRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: 9dfc825aed78fcd4ba02077103263b40, type: 2}
+  - {fileID: 2100000, guid: 538f8df14d59f4c4d91aa3a0f1849b23, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -304,6 +304,8 @@ MonoBehaviour:
   _displayName: FERAL POSSUM
   _height: 1.35
   _width: 150
+  _worldScale: 0.008
+  _labelFontSize: 15
   _alwaysVisible: 0
   _nearVisibilityDistance: 10
   _maximumVisibilityDistance: 30
@@ -327,6 +329,9 @@ MonoBehaviour:
   _damageWindup: 0.253
   _attackAnimationTrigger: 
   _showPossumScratchOnHit: 1
+  _screenHitFrames: []
+  _screenHitSecondsPerFrame: 0.08
+  _screenHitHoldSeconds: 0.16
   _lineOfSightLayers:
     serializedVersion: 2
     m_Bits: 4294967295
