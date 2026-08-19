@@ -26,6 +26,7 @@ namespace SpookyGame.Player
         private LineRenderer _beam;
         private Material _beamMaterial;
         private Coroutine _feedbackRoutine;
+        private FlashlightFlicker _flicker;
         private BatteryLight _batterySource;
         private float _baseIntensity;
         private float _nextFireTime;
@@ -42,6 +43,9 @@ namespace SpookyGame.Player
 
             if (_flashlight != null)
                 _baseIntensity = _flashlight.intensity;
+
+            // When present, the flicker owns the light's intensity - see ShowFeedback.
+            _flicker = GetComponentInChildren<FlashlightFlicker>(true);
 
             CreateBeamRenderer();
         }
@@ -167,7 +171,13 @@ namespace SpookyGame.Player
                 _beam.enabled = true;
             }
 
-            if (_flashlight != null)
+            if (_flicker != null)
+            {
+                // Compose with whatever the bulb is doing: a shot fired mid-failure
+                // flares from the dim level rather than snapping back to full.
+                _flicker.Pulse(_pulseIntensityMultiplier, _pulseSeconds);
+            }
+            else if (_flashlight != null)
             {
                 _flashlight.enabled = true;
                 _flashlight.intensity = _baseIntensity * _pulseIntensityMultiplier;
@@ -184,7 +194,7 @@ namespace SpookyGame.Player
 
         private void RestoreLight()
         {
-            if (_flashlight == null) return;
+            if (_flashlight == null || _flicker != null) return; // flicker restores its own state
             _flashlight.intensity = _baseIntensity;
             _flashlight.enabled = _batterySource != null && _batterySource.IsOn;
         }

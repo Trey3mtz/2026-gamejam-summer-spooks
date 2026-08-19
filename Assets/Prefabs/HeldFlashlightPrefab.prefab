@@ -103,6 +103,7 @@ GameObject:
   - component: {fileID: 7566074695569165719}
   - component: {fileID: 4922865075364547597}
   - component: {fileID: 6840271359981764215}
+  - component: {fileID: 760000000000000001}
   m_Layer: 10
   m_Name: HeldFlashlightPrefab
   m_TagString: Untagged
@@ -349,3 +350,31 @@ MonoBehaviour:
   m_ShadowLayerMask: 1
   m_RenderingLayers: 1
   m_ShadowRenderingLayers: 1
+--- !u!114 &760000000000000001
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6905784067262271382}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b9c70b5630c14e4f307b7dfa0ef0879f, type: 3}
+  m_Name:
+  m_EditorClassIdentifier: Assembly-CSharp::SpookyGame.Player.FlashlightFlicker
+  _light: {fileID: 1934897462340285394}
+  _rollInterval: 1.5
+  _flickerChance: 0.08
+  _villainChanceMultiplier: 2
+  _villainDetectionRadius: 12
+  _villainMask:
+    serializedVersion: 2
+    m_Bits: 64
+  _reheatRate: 22
+  _sagRate: 70
+  _idleNoiseDepth: 0.05
+  _faultNoiseDepth: 0.3
+  _noiseSpeed: 11
+  _coolingColor: {r: 1, g: 0.55, b: 0.22, a: 1}
+  _dimSpotAngleScale: 0.5
+  _dimRangeScale: 0.6
